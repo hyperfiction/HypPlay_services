@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<!-- misc -->
+		<classpath name="src" />
+
+
+	<!-- ndll -->
+		<ndll name="HypPlayServices" if="android"/>
+
+	<!-- android -->
+		<java path="/project/android" if="android"/>
+		<template path="/templates/android/res" rename="res" if="android"/>
+		<template path="/templates/android/libs" rename="libs" if="android"/>
+		<template path="/templates/android/libs" rename="libs" if="android"/>
+		<template path="/templates/android/src" rename="src" if="android"/>
+
+	<!-- flash -->
+
+</project>
