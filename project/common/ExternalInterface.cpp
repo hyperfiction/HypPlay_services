@@ -54,14 +54,15 @@ extern "C"{
 		return 0;
 	}
 
-	void HypPlayServices_onEvent( const char *sType , const char *sArg ){
+	void HypPlayServices_onEvent( const char *sType , const char *sArg , int statusCode ){
 		#ifdef ANDROID
 		ALOG("hypps_onEvent" );
 		#endif
-		val_call2(
+		val_call3(
 					eval_onEvent->get( ) ,
 					alloc_string( sType ) ,
-					alloc_string( sArg )
+					alloc_string( sArg ),
+					alloc_int( statusCode )
 				);
 	}
 
@@ -74,24 +75,25 @@ extern "C"{
 
 	#ifdef ANDROID
 
-		JNIEXPORT void JNICALL Java_fr_hyperfiction_HypPlayServices_onEvent(
+		JNIEXPORT void JNICALL Java_fr_hyperfiction_playservices_PlayServices_onEvent(
 																	JNIEnv * env ,
 																	jobject obj ,
 																	jstring jsEvName,
-																	jstring javaArg
+																	jstring javaArg,
+																	jint jStatusCode
 																){
-			ALOG("Java_fr_hyperfiction_HypPlayServices_onEvent" );
+			ALOG("Java_fr_hyperfiction_playservices_PlayServices_onEvent" );
 
 			const char *sEvName	= env->GetStringUTFChars( jsEvName , 0 );
 			const char *sArg  	= env->GetStringUTFChars( javaArg , 0 );
 
-			HypPlayServices_onEvent( sEvName , sArg );
+			HypPlayServices_onEvent( sEvName , sArg , jStatusCode );
 
 			env->ReleaseStringUTFChars( jsEvName	, sEvName );
 			env->ReleaseStringUTFChars( javaArg 	, sArg );
 		}
 
-		JNIEXPORT void JNICALL Java_fr_hyperfiction_HypPlayServicesFrag_onEvent(
+		JNIEXPORT void JNICALL Java_fr_hyperfiction_playservices_HypPlayServicesFrag_onEvent(
 																	JNIEnv * env ,
 																	jobject obj ,
 																	jstring jsEvName,
@@ -102,12 +104,11 @@ extern "C"{
 			const char *sEvName	= env->GetStringUTFChars( jsEvName , 0 );
 			const char *sArg  	= env->GetStringUTFChars( javaArg , 0 );
 
-			HypPlayServices_onEvent( sEvName , sArg );
+			HypPlayServices_onEvent( sEvName , sArg , 0 );
 
 			env->ReleaseStringUTFChars( jsEvName	, sEvName );
 			env->ReleaseStringUTFChars( javaArg 	, sArg );
 		}
-
 
 	#endif
 }

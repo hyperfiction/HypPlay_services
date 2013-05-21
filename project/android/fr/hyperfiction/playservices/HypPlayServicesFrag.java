@@ -1,11 +1,11 @@
-package fr.hyperfiction;
+package fr.hyperfiction.playservices;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import fr.hyperfiction.HypPlayServices;
+import fr.hyperfiction.playservices.PlayHelper;
 
 import org.haxe.nme.GameActivity;
 
@@ -16,7 +16,7 @@ import com.google.example.games.basegameutils.GameHelper;
  * @author shoe[box]
  */
 
-class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListener{
+public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListener{
 
 	static public native void onEvent( String jsEvName , String javaArg );
 	static{
@@ -52,8 +52,8 @@ class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListe
 		public void onCreate( Bundle b ){
 			trace("onCreate");
 			super.onCreate( b );
-			HypPlayServices.getHelper( ).setup( this , GameHelper.CLIENT_GAMES );
-			onEvent( HypPlayServices.INIT , "" );
+			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
+			onEvent( PlayServices.INIT , "" );
 		}
 
 		/**
@@ -64,7 +64,7 @@ class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListe
 		*/
 		public void onSignInFailed( ){
 			trace("onSignInFailed");
-			onEvent( HypPlayServices.SIGIN_FAILED , "" );
+			onEvent( PlayServices.SIGIN_FAILED , "" );
 		}
 
 		/**
@@ -75,7 +75,7 @@ class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListe
 		*/
 		public void onSignInSucceeded( ){
 			trace("onSignInSucceeded");
-			onEvent( HypPlayServices.SIGIN_SUCCESS , "" );
+			onEvent( PlayServices.SIGIN_SUCCESS , "" );
 		}
 
 		public void onActivityResult (int requestCode, int resultCode, Intent data){

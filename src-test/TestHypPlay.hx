@@ -1,6 +1,12 @@
 package;
 
-import fr.hyperfiction.HypPlayServices;
+//import fr.hyperfiction.HypPlayServices;
+
+import fr.hyperfiction.playservices.PlayServices;
+import fr.hyperfiction.playservices.Achievements;
+import fr.hyperfiction.playservices.Leaderboards;
+
+import nme.Lib;
 import nme.display.Sprite;
 import nme.text.TextField;
 import nme.events.MouseEvent;
@@ -23,32 +29,9 @@ class TestHypPlay extends Sprite{
 		public function new() {
 			trace("constructor");
 			super( );
-			_buttons( );
-			HypPlayServices.onStatus = function( s : String , sArg : String ){
-				trace("onStatus ::"+s+" - "+sArg);
-
-				switch( s ){
-
-					case HypPlayServices.INIT:
-
-
-					case HypPlayServices.SIGIN_SUCCESS:
-						trace("SIGIN_SUCCESS");
-						trace("isSignedIn ::: "+HypPlayServices.isSignedIn( ) );
-						trace( HypPlayServices.getScopes( ));
-						//trace( HypPlayServices.signOut( ));
-						//trace("isSignedIn ::: "+HypPlayServices.isSignedIn( ) );
-						//HypPlayServices.submitScore("CgkI_42Q27cXEAIQAQ",150);
-						//HypPlayServices.showLeaderboard("CgkI_42Q27cXEAIQAQ");
-						//HypPlayServices.unlockAchievement("CgkI_42Q27cXEAIQAw");
-						//HypPlayServices.showAchievements( );
-
-				}
-
-			}
-			HypPlayServices.init( );
-
-
+			PlayServices.onStatus = _onStatus;
+			PlayServices.onLeaderboard_metas = _onLb_metas;
+			PlayServices.initialize( );
 		}
 
 	// -------o public
@@ -63,18 +46,42 @@ class TestHypPlay extends Sprite{
 		* @private
 		* @return	void
 		*/
+		private function _onStatus( s : String , sArg : String , iCode : Int ) : Void{
+			trace("iCode ::: "+iCode);
+			trace("_onStatus ::: "+s+" - "+sArg+" - "+PlayServices.INIT);
+			switch( s ){
+
+				case PlayServices.INIT:
+					trace("isSignedIn : "+PlayServices.isSigned_in( ));
+					PlayServices.beginUserInitiated_sign_in( );
+
+				case PlayServices.SIGIN_SUCCESS:
+					_buttons( );
+
+				case PlayServices.ON_SCORE_SUBMITTED:
+					trace("ON_SCORE_SUBMITTED ::: "+sArg);
+
+			}
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
 		private function _buttons( ) : Void{
-			var a : Array<String> = [ "SIGN" , "ACHIEVMENTS" , "LEADERBOARD" , "ALL_LEADERBOARDS" ];
+			var a : Array<String> = [ "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "ACHIEVEMENT_INC_SYNC" , "REVEAL_ACHIEVEMENT" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "LEADERBOARD_METAS" , "SUBMIT_SCORE" , "SUBMIT_SCORE_SYNC" ];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
 			for( s in a ){
 
 				var btn = new TestButton( s );
-					btn.y = inc * 60;
+					btn.y = inc;
 					btn.name = s;
 				spContainer.addChild( btn );
-				inc++;
+				inc+=Std.int( btn.height + 20 );
 
 			}
 			spContainer.x = ( nme.Lib.current.stage.stageWidth - spContainer.width ) / 2;
@@ -84,19 +91,36 @@ class TestHypPlay extends Sprite{
 			spContainer.addEventListener( MouseEvent.MOUSE_UP , function( e : MouseEvent ){
 
 				switch( e.target.name ){
-					case "SIGN":
-						trace("HypPlayServices.isSignedIn( ) ::: "+HypPlayServices.isSignedIn( ));
-						HypPlayServices.beginUserInitiatedSignIn( );
-						trace("HypPlayServices.isSignedIn( ) ::: "+HypPlayServices.isSignedIn( ));
 
-					case "ACHIEVMENTS":
-						HypPlayServices.showAchievements( );
+					case "ACHIEVEMENT":
+						Achievements.open( );
+
+					case "ACHIEVEMENT_INC":
+						Achievements.increment( "CgkI_42Q27cXEAIQBA" , 2 , false );
+
+					case "ACHIEVEMENT_INC_SYNC":
+						Achievements.increment( "CgkI_42Q27cXEAIQBA" , 2 , true );
+
+					case "REVEAL_ACHIEVEMENT":
+						Achievements.revealAchievement( "CgkI_42Q27cXEAIQBQ" );
+
+					case "UNLOCK_ACHIEVEMENT":
+						Achievements.unlockAchievement("CgkI_42Q27cXEAIQBQ",true);
 
 					case "LEADERBOARD":
-						HypPlayServices.showLeaderboard("CgkI_42Q27cXEAIQAQ");
+						Leaderboards.openBy_id( "CgkI_42Q27cXEAIQAQ" );
 
 					case "ALL_LEADERBOARDS":
-						HypPlayServices.showAllLeaderboards( );
+						Leaderboards.openAll( );
+
+					case "LEADERBOARD_METAS":
+						Leaderboards.loadMeta_datas( "CgkI_42Q27cXEAIQAQ" );
+
+					case "SUBMIT_SCORE":
+						Leaderboards.submitScore( "CgkI_42Q27cXEAIQAQ" , 250 );
+
+					case "SUBMIT_SCORE_SYNC":
+						Leaderboards.submitScore( "CgkI_42Q27cXEAIQAQ" , 250 , true );
 
 				}
 
@@ -109,12 +133,8 @@ class TestHypPlay extends Sprite{
 		* @private
 		* @return	void
 		*/
-		private function _sign( ) : Void{
-			trace("init");
-			trace("isSignedIn ::: "+HypPlayServices.isSignedIn( ) );
-			HypPlayServices.enableDebug_log( true  , "debug" );
-			HypPlayServices.beginUserInitiatedSignIn( );
-
+		private function _onLb_metas( a : Array<LeaderboardMetas> ) : Void{
+			trace("_onLb_metas ::: "+a);
 		}
 
 	// -------o misc
@@ -139,12 +159,14 @@ class TestButton extends Sprite{
 		public function new( s : String ) {
 			super( );
 			graphics.beginFill( 0xEEEEEE );
-			graphics.drawRect( 0 , 0 , 200 , 40 );
+			graphics.drawRect( 0 , 0 , Lib.current.stage.stageWidth * 0.8 , Lib.current.stage.stageHeight * 0.08 );
 			graphics.endFill( );
 
-			var tf = new TextField( );
-				tf.width = 200;
-				tf.height = 40;
+			var 	tf = new TextField( );
+				tf.defaultTextFormat = new nme.text.TextFormat( null , 25 );
+				tf.width = width;
+				tf.height = height;
+				//tf.border = true;
 				tf.text = s;
 			addChild( tf );
 
