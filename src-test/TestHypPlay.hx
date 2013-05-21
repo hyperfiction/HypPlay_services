@@ -5,6 +5,7 @@ package;
 import fr.hyperfiction.playservices.PlayServices;
 import fr.hyperfiction.playservices.Achievements;
 import fr.hyperfiction.playservices.Leaderboards;
+import fr.hyperfiction.playservices.Multiplayers;
 
 import nme.Lib;
 import nme.display.Sprite;
@@ -29,6 +30,7 @@ class TestHypPlay extends Sprite{
 		public function new() {
 			trace("constructor");
 			super( );
+			Multiplayers.onEvent = _onMultiplayer_event;
 			PlayServices.onStatus = _onStatus;
 			PlayServices.onLeaderboard_metas = _onLb_metas;
 			PlayServices.initialize( );
@@ -71,7 +73,7 @@ class TestHypPlay extends Sprite{
 		* @return	void
 		*/
 		private function _buttons( ) : Void{
-			var a : Array<String> = [ "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "ACHIEVEMENT_INC_SYNC" , "REVEAL_ACHIEVEMENT" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "LEADERBOARD_METAS" , "SUBMIT_SCORE" , "SUBMIT_SCORE_SYNC" ];
+			var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
@@ -91,6 +93,12 @@ class TestHypPlay extends Sprite{
 			spContainer.addEventListener( MouseEvent.MOUSE_UP , function( e : MouseEvent ){
 
 				switch( e.target.name ){
+
+					case "INVITE":
+						Multiplayers.invite( 1 , 1 );
+
+					case "QUICK_GAME":
+						Multiplayers.quickGame( 1 , 1 );
 
 					case "ACHIEVEMENT":
 						Achievements.open( );
@@ -125,6 +133,16 @@ class TestHypPlay extends Sprite{
 				}
 
 			});
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		private function _onMultiplayer_event( s : String , room : RoomDesc , status : Int ) : Void{
+			trace("_onMultiplayer_event");
 		}
 
 		/**

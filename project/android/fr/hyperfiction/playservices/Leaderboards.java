@@ -38,8 +38,6 @@ class Leaderboards{
 														PlayHelper.getInstance( ).getGamesClient( ).getAllLeaderboardsIntent( ),
 														ID_LEADERBOARD_INTENT
 													);
-
-
 		}
 
 		/**

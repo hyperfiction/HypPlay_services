@@ -46,6 +46,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #endif
 
 AutoGCRoot *eval_onEvent = 0;
+AutoGCRoot *eval_onEvent_multi = 0;
 
 extern "C"{
 
@@ -60,6 +61,18 @@ extern "C"{
 		#endif
 		val_call3(
 					eval_onEvent->get( ) ,
+					alloc_string( sType ) ,
+					alloc_string( sArg ),
+					alloc_int( statusCode )
+				);
+	}
+
+	void Multiplayers_onEvent( const char *sType , const char *sArg , int statusCode ){
+		#ifdef ANDROID
+		ALOG("Multiplayers_onEvent" );
+		#endif
+		val_call3(
+					eval_onEvent_multi->get( ) ,
 					alloc_string( sType ) ,
 					alloc_string( sArg ),
 					alloc_int( statusCode )
@@ -82,12 +95,26 @@ extern "C"{
 																	jstring javaArg,
 																	jint jStatusCode
 																){
-			ALOG("Java_fr_hyperfiction_playservices_PlayServices_onEvent" );
-
 			const char *sEvName	= env->GetStringUTFChars( jsEvName , 0 );
 			const char *sArg  	= env->GetStringUTFChars( javaArg , 0 );
 
 			HypPlayServices_onEvent( sEvName , sArg , jStatusCode );
+
+			env->ReleaseStringUTFChars( jsEvName	, sEvName );
+			env->ReleaseStringUTFChars( javaArg 	, sArg );
+		}
+
+		JNIEXPORT void JNICALL Java_fr_hyperfiction_playservices_Multiplayers_onEvent(
+																	JNIEnv * env ,
+																	jobject obj ,
+																	jstring jsEvName,
+																	jstring javaArg,
+																	jint jStatusCode
+																){
+			const char *sEvName	= env->GetStringUTFChars( jsEvName , 0 );
+			const char *sArg  	= env->GetStringUTFChars( javaArg , 0 );
+
+			Multiplayers_onEvent( sEvName , sArg , jStatusCode );
 
 			env->ReleaseStringUTFChars( jsEvName	, sEvName );
 			env->ReleaseStringUTFChars( javaArg 	, sArg );
@@ -99,8 +126,6 @@ extern "C"{
 																	jstring jsEvName,
 																	jstring javaArg
 																){
-			ALOG("Java_fr_hyperfiction_HypPlayServicesFrag_onEvent" );
-
 			const char *sEvName	= env->GetStringUTFChars( jsEvName , 0 );
 			const char *sArg  	= env->GetStringUTFChars( javaArg , 0 );
 
@@ -116,13 +141,16 @@ extern "C"{
 // Callbacks ------------------------------------------------------------------------------------------------------
 
 	static value HypPlayServices_set_event_callback( value onCall ){
-		#ifdef ANDROID
-		ALOG("HypPS_set_event_callback" );
-		#endif
 		eval_onEvent = new AutoGCRoot( onCall );
 		return alloc_bool( true );
 	}
 	DEFINE_PRIM( HypPlayServices_set_event_callback , 1 );
+
+	static value HypPlayServices_set_event_callback_multiplayers( value onCall ){
+		eval_onEvent_multi = new AutoGCRoot( onCall );
+		return alloc_bool( true );
+	}
+	DEFINE_PRIM( HypPlayServices_set_event_callback_multiplayers , 1 );
 
 // iPhone ---------------------------------------------------------------------------------------------------------
 

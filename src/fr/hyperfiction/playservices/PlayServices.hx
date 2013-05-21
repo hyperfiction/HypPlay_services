@@ -1,5 +1,6 @@
 package fr.hyperfiction.playservices;
 
+import fr.hyperfiction.playservices.Multiplayers;
 import haxe.Json;
 
 /**
@@ -42,6 +43,7 @@ class PlayServices{
 		static public function initialize( ) : Void {
 			trace("initalize");
 			_setCallback( _onCallback );
+			Multiplayers.initialize( );
 			_initialize( );
 		}
 
@@ -54,7 +56,7 @@ class PlayServices{
 		#if android
 		@JNI
 		#end
-		static public function clearNotifications( ) : Void {
+		static public function clearAllNotifications( ) : Void {
 
 		}
 

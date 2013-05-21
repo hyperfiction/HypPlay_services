@@ -20,7 +20,9 @@ import org.json.JSONObject;
  * @author shoe[box]
  */
 
-public class PlayHelper extends GameHelper implements OnAchievementUpdatedListener , OnLeaderboardMetadataLoadedListener , OnScoreSubmittedListener{
+public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListener ,
+											OnLeaderboardMetadataLoadedListener ,
+											OnScoreSubmittedListener{
 
 	// -------o constructor
 
@@ -36,6 +38,8 @@ public class PlayHelper extends GameHelper implements OnAchievementUpdatedListen
 
 	// -------o public
 
+		//Achievements -----------------------------------------------------------------------------------------
+
 		/**
 		*
 		*
@@ -46,6 +50,8 @@ public class PlayHelper extends GameHelper implements OnAchievementUpdatedListen
 			trace("onAchievementUpdated ::: "+statusCode);
 			PlayServices.onEvent( PlayServices.ON_ACHIEVEMENT_UPDATED , achievementId+"" , statusCode );
 		}
+
+		//Leaderboards -----------------------------------------------------------------------------------------
 
 		/**
 		*
@@ -91,7 +97,6 @@ public class PlayHelper extends GameHelper implements OnAchievementUpdatedListen
 
 
 	// -------o protected
-
 
 
 	// -------o misc

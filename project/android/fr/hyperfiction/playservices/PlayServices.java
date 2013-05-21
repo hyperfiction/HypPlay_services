@@ -24,11 +24,11 @@ class PlayServices{
 	}
 
 	public static String INIT				= "HypPS_INIT";
-	public static String SIGIN_SUCCESS			= "HypPS_SIGIN_SUCCESS";
-	public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
+	public static String ON_ACHIEVEMENT_UPDATED	= "HypPS_ON_ACHIEVEMENT_UPDATED";
 	public static String ON_LEADERBOARD_METAS	= "HypPS_ON_LEADERBOARD_METAS";
 	public static String ON_SCORE_SUBMITTED		= "HypPS_ON_SCORE_SUBMITTED";
-	public static String ON_ACHIEVEMENT_UPDATED	= "HypPS_ON_ACHIEVEMENT_UPDATED";
+	public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
+	public static String SIGIN_SUCCESS			= "HypPS_SIGIN_SUCCESS";
 
 	public HypPlayServicesFrag frag;
 
@@ -66,7 +66,7 @@ class PlayServices{
 		* @return	void
 		*/
 		static public void clearAllNotifications( ){
-			PlayHelper.getInstance( ).getGameClient( ).clearAllNotifications( );
+			PlayHelper.getInstance( ).getGamesClient( ).clearAllNotifications( );
 		}
 
 		/**
@@ -76,7 +76,7 @@ class PlayServices{
 		* @return	void
 		*/
 		static public void clearNotifications( int type ){
-			PlayHelper.getInstance( ).getGameClient( ).clearNotifications( type );
+			PlayHelper.getInstance( ).getGamesClient( ).clearNotifications( type );
 		}
 
 		/**
@@ -86,7 +86,7 @@ class PlayServices{
 		* @return	void
 		*/
 		static public String getCurrent_account_name( ) {
-			return PlayHelper.getInstance( ).getGameClient( ).getCurrentAccountName( );
+			return PlayHelper.getInstance( ).getGamesClient( ).getCurrentAccountName( );
 		}
 
 		/**
