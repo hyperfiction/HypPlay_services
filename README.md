@@ -25,7 +25,7 @@ After your first compilation you need to edit the "ids.xml" file ( [YOUR_BIN_FOL
 
 ```xml
 <string name="app_id">PUT YOUR PLAY SERVICES ID HERE</string>
-
+````
 Recompiling
 -----------
 For recompiling the native extensions just use the sh files contained in the project folder
