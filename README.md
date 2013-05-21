@@ -1,6 +1,6 @@
 HypPlayService
 =============================
-A Google Play Services native extension
+A Google Play Services native extension for Haxe NME
 -----------------------------
 
 This NME native extension allows you to integrate the Google Play Services into your NME application.
@@ -41,7 +41,6 @@ TBD
 Made at [Hyperfiction](http://hyperfiction.fr)
 --------------------
 Developed by :
-- [Louis Beltramo](https://github.com/louisbl) [@louisbl](https://twitter.com/louisbl)
 - [Johann Martinache](https://github.com/shoebox) [@shoe_box](https://twitter.com/shoe_box)
 
 License
