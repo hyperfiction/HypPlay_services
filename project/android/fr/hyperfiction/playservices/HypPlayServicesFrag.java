@@ -1,15 +1,20 @@
 package fr.hyperfiction.playservices;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.google.example.games.basegameutils.GameHelper;
+
+import fr.hyperfiction.playservices.Multiplayers;
 import fr.hyperfiction.playservices.PlayHelper;
+
+import java.util.ArrayList;
 
 import org.haxe.nme.GameActivity;
 
-import com.google.example.games.basegameutils.GameHelper;
 
 /**
  * ...
@@ -78,8 +83,14 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 			onEvent( PlayServices.SIGIN_SUCCESS , "" );
 		}
 
-		public void onActivityResult (int requestCode, int resultCode, Intent data){
+		public void onActivityResult (int requestCode, int resultCode, Intent datas ){
 			trace("onActivityResult ::: "+requestCode);
+			switch( requestCode ){
+
+				case Multiplayers.ID_INVITE_INTENT:
+					Multiplayers.handleResults( resultCode , datas );
+
+			}
 		}
 
 	// -------o misc

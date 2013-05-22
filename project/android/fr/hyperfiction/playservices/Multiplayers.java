@@ -1,9 +1,11 @@
 package fr.hyperfiction.playservices;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
@@ -16,6 +18,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 import fr.hyperfiction.playservices.PlayHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.haxe.nme.GameActivity;
@@ -40,8 +43,14 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	public static String ROOM_CREATED			= "HypPS_ROOM_CREATED";
 	public static String ROOM_JOINED			= "HypPS_ROOM_JOINED";
 	public static String ROOM_LEFT			= "HypPS_ROOM_LEFT";
+	public static String INVITE_CANCEL			= "HypPS_INVITE_CANCEL";
+	public static String INVITE_USERS			= "HypPS_INVITE_USERS";
 
-	private static final int ID_INVITE_INTENT = 5004;
+	public static final int ID_INVITE_INTENT = 5004;
+
+	private static RoomConfig.Builder _room;
+	private static int _iMinOpp;
+	private static int _iMaxOpp;
 
 	// -------o constructor
 
@@ -56,6 +65,20 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		}
 
 	// -------o public
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void handleResults( int resultCode , Intent datas ){
+			if( resultCode != Activity.RESULT_OK ){
+				_cancelInvite( );
+			}else{
+				_inviteUsers( datas.getExtras( ) );
+			}
+		}
 
 		/**
 		*
@@ -83,12 +106,10 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 
 			Multiplayers listener = Multiplayers.getInstance( );
 
-			RoomConfig.Builder 	r = RoomConfig.builder( listener );
-        						r.setMessageReceivedListener( listener );
-        						r.setRoomStatusUpdateListener( listener );
+			RoomConfig.Builder 	r = _buildRoom( );
         						r.setAutoMatchCriteria(autoMatchCriteria);
+        		_createRoom( );
 
-        		PlayHelper.getInstance( ).getGamesClient( ).createRoom( r.build( ) );
 		}
 
 		/**
@@ -100,8 +121,11 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		static public void invite( int iMin_opponents , int iMax_opponents ){
 			trace("invite");
 
-			Intent intent = PlayHelper.getInstance( ).getGamesClient().getSelectPlayersIntent( iMin_opponents , iMax_opponents );
-			GameActivity.getInstance( ).startActivityForResult(intent, ID_INVITE_INTENT );
+			Intent intent = PlayHelper.getInstance( ).getGamesClient().getSelectPlayersIntent(
+																				_iMinOpp = iMin_opponents ,
+																				_iMaxOpp = iMax_opponents
+																			);
+			PlayServices.getInstance( ).frag.startActivityForResult(intent, ID_INVITE_INTENT );
 
 		}
 
@@ -290,6 +314,63 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 				trace( "error ::: "+e );
 			}
 			return o.toString( );
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		private static void _inviteUsers( Bundle extras ){
+			trace("_inviteUsers ::: "+extras);
+			ArrayList<String> players = extras.getStringArrayList( GamesClient.EXTRA_PLAYERS );
+			trace("players ::: "+players);
+			onEvent( INVITE_USERS , players.toString( ) , 0 );
+
+			/*
+			Bundle autoMatchCriteria = null;
+        		int minAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MIN_AUTOMATCH_PLAYERS, 0 );
+        		int maxAutoMatchPlayers = data.getIntExtra(GamesClient.EXTRA_MAX_AUTOMATCH_PLAYERS, 0 );
+			*/
+
+        		_buildRoom( );
+        		_room.addPlayersToInvite( players );
+        		_createRoom( );
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		private static void _cancelInvite( ){
+			onEvent( INVITE_CANCEL , "" , 0 );
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		static private RoomConfig.Builder _buildRoom( ){
+			Multiplayers listener = Multiplayers.getInstance( );
+			_room = RoomConfig.builder( listener );
+			_room.setMessageReceivedListener( listener );
+			_room.setRoomStatusUpdateListener( listener );
+        		return _room;
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		private static void _createRoom( ){
+			 PlayHelper.getInstance( ).getGamesClient( ).createRoom( _room.build( ) );
 		}
 
 
