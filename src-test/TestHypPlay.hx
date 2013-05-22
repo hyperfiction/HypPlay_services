@@ -19,6 +19,8 @@ import nme.events.MouseEvent;
 
 class TestHypPlay extends Sprite{
 
+	private var _sRoom : String;
+
 	// -------o constructor
 
 		/**
@@ -30,10 +32,9 @@ class TestHypPlay extends Sprite{
 		public function new() {
 			trace("constructor");
 			super( );
-			Multiplayers.onEvent = _onMultiplayer_event;
-			PlayServices.onStatus = _onStatus;
-			PlayServices.onLeaderboard_metas = _onLb_metas;
-			PlayServices.initialize( );
+			Lib.current.stage.scaleMode = nme.display.StageScaleMode.NO_SCALE;
+			Lib.current.stage.align     = nme.display.StageAlign.TOP_LEFT;
+			haxe.Timer.delay( _init , 200 );
 		}
 
 	// -------o public
@@ -48,9 +49,23 @@ class TestHypPlay extends Sprite{
 		* @private
 		* @return	void
 		*/
+		private function _init( ) : Void{
+			Multiplayers.onEvent = _onMultiplayer_event;
+			Multiplayers.onInvitation = _onInvitation;
+			PlayServices.onStatus = _onStatus;
+			PlayServices.onLeaderboard_metas = _onLb_metas;
+			PlayServices.initialize( );
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
 		private function _onStatus( s : String , sArg : String , iCode : Int ) : Void{
-			trace("iCode ::: "+iCode);
 			trace("_onStatus ::: "+s+" - "+sArg+" - "+PlayServices.INIT);
+
 			switch( s ){
 
 				case PlayServices.INIT:
@@ -58,10 +73,15 @@ class TestHypPlay extends Sprite{
 					PlayServices.beginUserInitiated_sign_in( );
 
 				case PlayServices.SIGIN_SUCCESS:
+					Multiplayers.listenFor_invitations( );
 					_buttons( );
 
 				case PlayServices.ON_SCORE_SUBMITTED:
 					trace("ON_SCORE_SUBMITTED ::: "+sArg);
+
+				case PlayServices.ON_INVITATION:
+					trace("onInvitation ::: "+sArg);
+					Multiplayers.acceptInvitation( sArg );
 
 			}
 		}
@@ -91,6 +111,10 @@ class TestHypPlay extends Sprite{
 			addChild( spContainer );
 
 			spContainer.addEventListener( MouseEvent.MOUSE_UP , function( e : MouseEvent ){
+
+				#if android
+				nme.feedback.Haptic.vibrate(3, 100);
+				#end
 
 				switch( e.target.name ){
 
@@ -130,6 +154,10 @@ class TestHypPlay extends Sprite{
 					case "SUBMIT_SCORE_SYNC":
 						Leaderboards.submitScore( "CgkI_42Q27cXEAIQAQ" , 250 , true );
 
+					case "LEAVE_ROOM":
+						trace("leaveRoom ::: "+_sRoom);
+						Multiplayers.leaveRoom( _sRoom );
+
 				}
 
 			});
@@ -142,7 +170,30 @@ class TestHypPlay extends Sprite{
 		* @return	void
 		*/
 		private function _onMultiplayer_event( s : String , room : RoomDesc , status : Int ) : Void{
-			trace("_onMultiplayer_event");
+			trace("_onMultiplayer_event ::: "+s+" - "+room+" - "+status);
+
+			switch( s ){
+
+				case Multiplayers.ROOM_CREATED:
+					_sRoom = room.createId;
+
+				case Multiplayers.ROOM_JOINED:
+					_sRoom = room.roomId;
+
+
+			}
+
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		private function _onInvitation( sInvitId : String , desc : InvitationDesc ) : Void{
+			trace("_onInvitation");
+			trace( desc );
 		}
 
 		/**
@@ -177,7 +228,7 @@ class TestButton extends Sprite{
 		public function new( s : String ) {
 			super( );
 			graphics.beginFill( 0xEEEEEE );
-			graphics.drawRect( 0 , 0 , Lib.current.stage.stageWidth * 0.8 , Lib.current.stage.stageHeight * 0.08 );
+			graphics.drawRect( 0 , 0 , Lib.current.stage.stageWidth , Lib.current.stage.stageHeight * 0.08 );
 			graphics.endFill( );
 
 			var 	tf = new TextField( );

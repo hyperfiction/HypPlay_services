@@ -23,12 +23,13 @@ class PlayServices{
 		System.loadLibrary( "HypPlayServices" );
 	}
 
-	public static String INIT				= "HypPS_INIT";
-	public static String ON_ACHIEVEMENT_UPDATED	= "HypPS_ON_ACHIEVEMENT_UPDATED";
-	public static String ON_LEADERBOARD_METAS	= "HypPS_ON_LEADERBOARD_METAS";
-	public static String ON_SCORE_SUBMITTED		= "HypPS_ON_SCORE_SUBMITTED";
-	public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
-	public static String SIGIN_SUCCESS			= "HypPS_SIGIN_SUCCESS";
+	final public static String INIT				= "HypPS_INIT";
+	final public static String ON_ACHIEVEMENT_UPDATED	= "HypPS_ON_ACHIEVEMENT_UPDATED";
+	final public static String ON_INVITATION		= "HypPS_ON_INVITATION";
+	final public static String ON_LEADERBOARD_METAS	= "HypPS_ON_LEADERBOARD_METAS";
+	final public static String ON_SCORE_SUBMITTED	= "HypPS_ON_SCORE_SUBMITTED";
+	final public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
+	final public static String SIGIN_SUCCESS		= "HypPS_SIGIN_SUCCESS";
 
 	public HypPlayServicesFrag frag;
 

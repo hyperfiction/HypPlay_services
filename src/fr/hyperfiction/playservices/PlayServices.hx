@@ -15,6 +15,7 @@ class PlayServices{
 
 	static public inline var INIT					: String = "HypPS_INIT";
 	static public inline var ON_ACHIEVEMENT_UPDATED	: String = "HypPS_ON_ACHIEVEMENT_UPDATED";
+	static public inline var ON_INVITATION			: String = "HypPS_ON_INVITATION";
 	static public inline var ON_LEADERBOARD_METAS	: String = "HypPS_ON_LEADERBOARD_METAS";
 	static public inline var ON_SCORE_SUBMITTED		: String = "HypPS_ON_SCORE_SUBMITTED";
 	static public inline var SIGIN_FAILED			: String = "HypPS_SIGIN_FAILED";

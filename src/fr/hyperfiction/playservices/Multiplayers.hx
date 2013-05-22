@@ -11,7 +11,14 @@ import nme.events.EventDispatcher;
 @:build( ShortCuts.mirrors( ) )
 class Multiplayers extends EventDispatcher{
 
+	public static inline var ON_INVITATION	: String = "HypPS_ON_INVITATION";
+	public static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
+	public static inline var ROOM_CREATED	: String = "HypPS_ROOM_CREATED";
+	public static inline var ROOM_JOINED	: String = "HypPS_ROOM_JOINED";
+	public static inline var ROOM_LEFT		: String = "HypPS_ROOM_LEFT";
+
 	static public var onEvent : String->RoomDesc->Int->Void;
+	static public var onInvitation : String->InvitationDesc->Void;
 
 	// -------o constructor
 
@@ -47,7 +54,20 @@ class Multiplayers extends EventDispatcher{
 		#if android
 		@JNI
 		#end
-		static public function listenFor_invitations( bListen : Bool = true ) : Void {
+		static public function listenFor_invitations( bOn : Bool = true ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function acceptInvitation( sInvite_ID : String ) : Void {
 
 		}
 
@@ -93,7 +113,7 @@ class Multiplayers extends EventDispatcher{
 		* @public
 		* @return	void
 		*/
-		public function  declineRoom_invitation( sInvitation_id : String ) : Bool {
+		public function  declineRoom_invitation( sInvite_ID : String ) : Bool {
 			return false;
 		}
 
@@ -103,7 +123,7 @@ class Multiplayers extends EventDispatcher{
 		* @public
 		* @return	void
 		*/
-		public function  dismissRoom_invitation( sInvitation_id : String ) : Bool {
+		public function  dismissRoom_invitation( sInvite_ID : String ) : Bool {
 			return false;
 		}
 
@@ -137,6 +157,15 @@ class Multiplayers extends EventDispatcher{
 			return null;
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public function leaveRoom( sRoom_ID : String ) : Void {
+
+		}
 
 	// -------o protected
 
@@ -158,9 +187,22 @@ class Multiplayers extends EventDispatcher{
 		* @return	void
 		*/
 		static private function _onMultiplayer_event( sEvent : String , sArg : String , iCode : Int ) : Void{
+			trace("_onMultiplayer_event ::: "+sEvent);
+			//
+				if( sEvent == ON_INVITATION ){
+					trace( sArg );
+					var json : InvitationDesc = Json.parse( sArg );
+					trace( json );
+					trace("onInvitation ::: "+onInvitation);
+					onInvitation( json.sInvitation_id , json );
+
+					return;
+				}
 
 			//
+				return;
 				var desc : RoomDesc = Json.parse( sArg );
+				trace( desc );
 				try{
 					desc = Json.parse( sArg );
 
@@ -191,51 +233,27 @@ class Multiplayers extends EventDispatcher{
 	// -------o misc
 
 }
-
-/**
- * ...
- * @author shoe[box]
- */
-
-class MultiplayersEvent extends Event{
-
-	public var room : RoomDesc;
-
-	public static inline var ROOM_CONNECTED	: String= "HypPS_ROOM_CONNECTED";
-	public static inline var ROOM_CREATED	: String= "HypPS_ROOM_CREATED";
-	public static inline var ROOM_JOINED	: String= "HypPS_ROOM_JOINED";
-	public static inline var ROOM_LEFT		: String= "HypPS_ROOM_LEFT";
-
-	// -------o constructor
-
-		/**
-		* constructor
-		*
-		* @param
-		* @return	void
-		*/
-		public function new( type : String ) {
-			super( type );
-		}
-
-	// -------o public
-
-
-
-	// -------o protected
-
-
-
-	// -------o misc
-
-}
-
 typedef RoomDesc={
-	public var createid			: String;
-	public var createtimestamp	: Int;
+	public var createId			: String;
+	public var creationtimestamp	: Int;
 	public var description		: String;
 	public var participants		: Array<String>;
 	public var roomId			: String;
 	public var status			: Int;
 	public var variant			: Int;
+}
+
+typedef InvitationDesc={
+	public var from			: InvitationFrom;
+	public var sInvitation_id	: String;
+	public var sTimestamp		: String;
+}
+
+typedef InvitationFrom={
+	public var bConnected_to_room	: Bool;
+	public var iStatus			: Int;
+	public var sFrom_icon_uri	: String;
+	public var sFrom_id			: String;
+	public var sFrom_image_uri	: String;
+	public var sFrom_name		: String;
 }
