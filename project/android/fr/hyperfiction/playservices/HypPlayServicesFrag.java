@@ -81,7 +81,6 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		public void onSignInSucceeded( ){
 			trace("onSignInSucceeded");
 			onEvent( PlayServices.SIGIN_SUCCESS , "" );
-			_checkFor_invitation( );
 		}
 
 		public void onActivityResult (int requestCode, int resultCode, Intent datas ){
@@ -89,22 +88,14 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 			switch( requestCode ){
 
 				case Multiplayers.ID_INVITE_INTENT:
-					Multiplayers.handleResults( resultCode , datas );
+					Multiplayers.handleInvitation_results( resultCode , datas );
+					break;
+
+				case Multiplayers.ID_INVITATIONS_INBOX:
+					Multiplayers.handleInvitation_select( resultCode , datas );
+					break;
 
 			}
-		}
-
-		/**
-		*
-		*
-		* @private
-		* @return	void
-		*/
-		private void _checkFor_invitation( ){
-			if( PlayHelper.getInstance( ).getInvitationId( ) != null ){
-				Multiplayers.onInvitation( PlayHelper.getInstance( ).getInvitationId( ) );
-			}
-
 		}
 
 	// -------o misc

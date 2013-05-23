@@ -6,6 +6,7 @@ import fr.hyperfiction.playservices.PlayServices;
 import fr.hyperfiction.playservices.Achievements;
 import fr.hyperfiction.playservices.Leaderboards;
 import fr.hyperfiction.playservices.Multiplayers;
+import fr.hyperfiction.playservices.StatusCode;
 
 import nme.Lib;
 import nme.display.Sprite;
@@ -64,7 +65,7 @@ class TestHypPlay extends Sprite{
 		* @return	void
 		*/
 		private function _onStatus( s : String , sArg : String , iCode : Int ) : Void{
-			trace("_onStatus ::: "+s+" - "+sArg+" - "+PlayServices.INIT);
+			trace("_onStatus ::: "+s+" || arg : "+sArg+" || code : "+iCode);
 
 			switch( s ){
 
@@ -73,6 +74,7 @@ class TestHypPlay extends Sprite{
 					PlayServices.beginUserInitiated_sign_in( );
 
 				case PlayServices.SIGIN_SUCCESS:
+					trace("SIGIN_SUCCESS");
 					Multiplayers.listenFor_invitations( );
 					_buttons( );
 
@@ -93,7 +95,8 @@ class TestHypPlay extends Sprite{
 		* @return	void
 		*/
 		private function _buttons( ) : Void{
-			var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
+			//var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
+			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM"];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
@@ -112,17 +115,23 @@ class TestHypPlay extends Sprite{
 
 			spContainer.addEventListener( MouseEvent.MOUSE_UP , function( e : MouseEvent ){
 
-				#if android
-				nme.feedback.Haptic.vibrate(3, 100);
-				#end
-
 				switch( e.target.name ){
 
 					case "INVITE":
-						Multiplayers.invite( 1 , 1 );
+						trace("invite");
+						Multiplayers.invitePlayers( 1 , 1 );
+
+					case "INVITATION_INBOX":
+						Multiplayers.openInvitations_inbox( );
 
 					case "QUICK_GAME":
 						Multiplayers.quickGame( 1 , 1 );
+
+					case "WAITING_ROOM":
+						Multiplayers.showWaiting_room( );
+
+					/*
+
 
 					case "ACHIEVEMENT":
 						Achievements.open( );
@@ -157,7 +166,7 @@ class TestHypPlay extends Sprite{
 					case "LEAVE_ROOM":
 						trace("leaveRoom ::: "+_sRoom);
 						Multiplayers.leaveRoom( _sRoom );
-
+					*/
 				}
 
 			});
@@ -169,13 +178,15 @@ class TestHypPlay extends Sprite{
 		* @private
 		* @return	void
 		*/
-		private function _onMultiplayer_event( s : String , room : RoomDesc , status : Int ) : Void{
+		private function _onMultiplayer_event( s : String , room : RoomDesc , status : Status ) : Void{
 			trace("_onMultiplayer_event ::: "+s+" - "+room+" - "+status);
-
+			trace( s+" === "+Multiplayers.ROOM_CREATED+" === "+(s==Multiplayers.ROOM_CREATED));
 			switch( s ){
 
 				case Multiplayers.ROOM_CREATED:
+				trace("ROOM_CREATED ( "+status+" ) ::: "+room+" - "+status);
 					_sRoom = room.createId;
+					Multiplayers.showWaiting_room( );
 
 				case Multiplayers.ROOM_JOINED:
 					_sRoom = room.roomId;
@@ -191,9 +202,16 @@ class TestHypPlay extends Sprite{
 		* @private
 		* @return	void
 		*/
-		private function _onInvitation( sInvitId : String , desc : InvitationDesc ) : Void{
+		private function _onInvitation( sInvitId : String , desc : InvitationDesc , status : Status ) : Void{
 			trace("_onInvitation");
+
+			if( status != OK )
+				return;
+
 			trace( desc );
+			trace( status );
+			Multiplayers.acceptInvitation( desc.sInvitation_id );
+
 		}
 
 		/**
