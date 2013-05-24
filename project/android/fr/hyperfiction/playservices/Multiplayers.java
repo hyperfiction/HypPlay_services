@@ -299,7 +299,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			byte[] ba = sMessage.getBytes();
 			trace(" p ::: "+_currentRoom.getParticipants( ) );
 			for( Participant p : _currentRoom.getParticipants() )
-				if( p.getParticipantId( ) == getGamesClient( ).getCurrentPlayerId( ))
+				if( p.getParticipantId( ) != getGamesClient( ).getCurrentPlayerId( ))
 				getGamesClient( ).sendReliableRealTimeMessage(
 														getInstance( ),
 														ba,
