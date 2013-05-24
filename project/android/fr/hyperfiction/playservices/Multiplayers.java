@@ -5,17 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.OnInvitationReceivedListener;
+import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeReliableMessageSentListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig.Builder;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
+import com.google.gson.Gson;
 
 import fr.hyperfiction.playservices.PlayHelper;
 
@@ -33,10 +35,12 @@ import org.json.JSONObject;
 
 class Multiplayers implements RealTimeMessageReceivedListener,
 						OnInvitationReceivedListener,
+						RealTimeReliableMessageSentListener,
 						RoomStatusUpdateListener,
 						RoomUpdateListener{
 
 	static public native void onEvent( String jsEvName , String javaArg , int statusCode );
+	static public native void onDatas( String sDatas , String sFrom );
 	static{
 		System.loadLibrary( "HypPlayServices" );
 	}
@@ -44,10 +48,17 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	final public static String INVITE_CANCEL	= "HypPS_INVITE_CANCEL";
 	final public static String INVITE_USERS		= "HypPS_INVITE_USERS";
 	final public static String ON_INVITATION	= "HypPS_ON_INVITATION";
+	final public static String ON_MESSAGE		= "HypPS_ON_INVITATION";
+	final public static String PEER_CONNECTED	= "HypPS_PEER_CONNECTED";
+	final public static String PEER_DECLINED	= "HypPS_PEER_DECLINED";
+	final public static String PEER_DISCONNECTED	= "HypPS_PEER_DISCONNECTED";
+	final public static String PEER_JOINED		= "HypPS_PEER_JOINED";
+	final public static String PEER_LEFT		= "HypPS_PEER_LEFT";
 	final public static String ROOM_CONNECTED	= "HypPS_ROOM_CONNECTED";
 	final public static String ROOM_CREATED		= "HypPS_ROOM_CREATED";
 	final public static String ROOM_JOINED		= "HypPS_ROOM_JOINED";
 	final public static String ROOM_LEFT		= "HypPS_ROOM_LEFT";
+	final public static String RTM_SEND		= "HypPS_RTM_SEND";
 
 	public static final int ID_INVITE_INTENT	= 5004;
 	public static final int ID_WAIT_INTENT		= 5005;
@@ -258,6 +269,47 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			_runIntent( i , ID_WAIT_INTENT );
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void sendString( String sMessage ){
+			trace("sendString :: "+sMessage+" - "+_currentRoom.getRoomId( ));
+			trace( "room ::: "+_currentRoom.getRoomId( ) );
+			byte[] ba = sMessage.getBytes();
+			getGamesClient( ).sendUnreliableRealTimeMessageToAll(
+															ba,
+															_currentRoom.getRoomId( )
+														);
+			ba = null;
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void sendString_reliable( String sMessage ){
+			trace("sendString_reliable :: "+sMessage);
+			trace( "room ::: "+_currentRoom.getRoomId( ) );
+			trace( "participants ::: "+_currentRoom.getParticipantIds( ) );
+			byte[] ba = sMessage.getBytes();
+			trace(" p ::: "+_currentRoom.getParticipants( ) );
+			for( Participant p : _currentRoom.getParticipants() )
+				if( p.getParticipantId( ) == getGamesClient( ).getCurrentPlayerId( ))
+				getGamesClient( ).sendReliableRealTimeMessage(
+														getInstance( ),
+														ba,
+														_currentRoom.getRoomId( ),
+														p.getParticipantId( )
+													);
+			ba = null;
+		}
+
+
 	// -------o callbacks
 
 		/**
@@ -285,7 +337,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*
 		*
 		* @public
-		* @return	void
+		* @return	voidf
 		*/
 		public void onLeftRoom( final int statusCode , final String roomId ){
 			trace("onLeftRoom ::: ");
@@ -360,6 +412,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onPeerDeclined(Room room, List<String> participantIds){
 			trace("onPeerDeclined");
+			onEvent( PEER_DECLINED , participantIds.toString( ) , 0 );
 		}
 
 		/**
@@ -380,6 +433,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onPeerJoined(Room room, List<String> participantIds){
 			trace("onPeerJoined");
+			onEvent( PEER_JOINED , participantIds.toString( ) , 0 );
 		}
 
 		/**
@@ -390,6 +444,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onPeerLeft(Room room, List<String> participantIds){
 			trace("onPeerLeft");
+			onEvent( PEER_LEFT , participantIds.toString( ) , 0 );
 		}
 
 		/**
@@ -400,6 +455,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onPeersConnected(Room room, List<String> participantIds){
 			trace("onPeersConnected");
+			onEvent( PEER_CONNECTED , participantIds.toString( ) , 0 );
 		}
 
 		/**
@@ -410,6 +466,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onPeersDisconnected(Room room, List<String> participantIds){
 			trace("onPeersDisconnected");
+			onEvent( PEER_DISCONNECTED , participantIds.toString( ) , 0 );
 		}
 
 		/**
@@ -467,8 +524,33 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
-		public void onRealTimeMessageReceived(RealTimeMessage message){
-			trace("onRealTimeMessageReceived ::: "+message);
+		public void onRealTimeMessageReceived(RealTimeMessage rtm){
+			trace("onRealTimeMessageReceived ::: "+rtm);
+			byte[] buff = rtm.getMessageData( );
+			String msg = null;
+			try{
+				msg = new String( rtm.getMessageData( ) , "UTF-8");
+			}catch( java.io.UnsupportedEncodingException e ){
+
+			}
+			onDatas( msg , rtm.getSenderParticipantId() );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public void onRealTimeMessageSent( int status , int tokenId , String participantId ){
+			final JSONObject o = new JSONObject( );
+			try{
+				o.put("tokenId" , tokenId );
+				o.put("participantId" , participantId );
+			}catch( org.json.JSONException e ){
+				trace( "error ::: "+e );
+			}
+			onEvent( RTM_SEND , o.toString( ) , status );
 		}
 
 	// -------o protected

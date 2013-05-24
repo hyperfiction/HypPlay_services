@@ -10,10 +10,12 @@ import haxe.Json;
 @:build( ShortCuts.mirrors( ) )
 class Multiplayers{
 
+	static public var onDatas		: String->String->Void;
 	static public var onEvent		: String->RoomDesc->Status->Void;
 	static public var onInvitation	: String->InvitationDesc->Status->Void;
 
 	public static inline var ON_INVITATION	: String = "HypPS_ON_INVITATION";
+	public static inline var ON_MESSAGE	: String = "HypPS_ON_MESSAGE";
 	public static inline var INVITE_CANCEL	: String = "HypPS_INVITE_CANCEL";
 	public static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
 	public static inline var ROOM_CREATED	: String = "HypPS_ROOM_CREATED";
@@ -41,7 +43,8 @@ class Multiplayers{
 		* @return	void
 		*/
 		static public function initialize( ) : Void {
-			_setCallback( _onMultiplayer_event );
+			_setEvent_callback( _onMultiplayers_event );
+			_setDatas_callback( _onMultiplayers_datas );
 		}
 
 		/**
@@ -152,6 +155,32 @@ class Multiplayers{
 
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function sendString( sMessage : String ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function sendString_reliable( sMessage : String ) : Void {
+
+		}
+
 	// -------o protected
 
 		/*
@@ -163,7 +192,20 @@ class Multiplayers{
 		#if cpp
 		@CPP("HypPlayServices","HypPlayServices_set_event_callback_multiplayers")
 		#end
-		static private function _setCallback( cb : Dynamic ) : Void{
+		static private function _setEvent_callback( cb : Dynamic ) : Void{
+
+		}
+
+		/*
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		#if cpp
+		@CPP("HypPlayServices","HypPlayServices_set_datas_callback_multiplayers")
+		#end
+		static private function _setDatas_callback( cb : Dynamic ) : Void{
 
 		}
 
@@ -173,7 +215,7 @@ class Multiplayers{
 		* @private
 		* @return	void
 		*/
-		static private function _onMultiplayer_event( sEvent : String , sArg : String , iCode : Int ) : Void{
+		static private function _onMultiplayers_event( sEvent : String , sArg : String , iCode : Int ) : Void{
 			trace("_onMultiplayer_event ::: "+sEvent);
 
 			var s : Status = StatusCode.translate( iCode );
@@ -181,20 +223,33 @@ class Multiplayers{
 			switch( sEvent ){
 
 				case ON_INVITATION:
-					trace("onInvitation ::: "+sArg);
+					trace("ON_INVITATION ::: "+sArg);
 					onInvitation( sEvent , Json.parse( sArg ) , s );
 
 				case INVITE_CANCEL:
 					trace("INVITE_CANCEL ::: "+s);
 
 				case ROOM_CREATED:
-					trace( ROOM_CREATED+" = "+sArg);
+					trace( "ROOM_CREATED ::: "+sArg);
 					onEvent( sEvent , Json.parse( sArg) , s );
+
+				case ON_MESSAGE:
+					onDatas( sEvent , sArg );
 
 				default:
 
 
 			}
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		static private function _onMultiplayers_datas( sDatas : String , sFrom : String ) : Void{
+			trace("_onMultiplayers_datas ::: "+sDatas+" from :"+sFrom);
 		}
 
 	// -------o misc

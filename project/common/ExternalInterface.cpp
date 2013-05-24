@@ -47,6 +47,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 AutoGCRoot *eval_onEvent = 0;
 AutoGCRoot *eval_onEvent_multi = 0;
+AutoGCRoot *eval_onDatas_multi = 0;
 
 extern "C"{
 
@@ -76,6 +77,17 @@ extern "C"{
 					alloc_string( sType ) ,
 					alloc_string( sArg ),
 					alloc_int( statusCode )
+				);
+	}
+
+	void Multiplayers_onDatas( const char *sDatas , const char *sFrom ){
+		#ifdef ANDROID
+		ALOG("Multiplayers_onDatas" );
+		#endif
+		val_call2(
+					eval_onDatas_multi->get( ) ,
+					alloc_string( sDatas ) ,
+					alloc_string( sFrom )
 				);
 	}
 
@@ -120,6 +132,21 @@ extern "C"{
 			env->ReleaseStringUTFChars( javaArg 	, sArg );
 		}
 
+		JNIEXPORT void JNICALL Java_fr_hyperfiction_playservices_Multiplayers_onDatas(
+																	JNIEnv * env ,
+																	jobject obj ,
+																	jstring jsDatas,
+																	jstring jsFrom
+																){
+			const char *sDatas	= env->GetStringUTFChars( jsDatas , 0 );
+			const char *sFrom  	= env->GetStringUTFChars( jsFrom , 0 );
+
+			Multiplayers_onDatas( sDatas , sFrom );
+
+			env->ReleaseStringUTFChars( jsDatas	, sDatas );
+			env->ReleaseStringUTFChars( jsFrom 	, sFrom );
+		}
+
 		JNIEXPORT void JNICALL Java_fr_hyperfiction_playservices_HypPlayServicesFrag_onEvent(
 																	JNIEnv * env ,
 																	jobject obj ,
@@ -151,6 +178,12 @@ extern "C"{
 		return alloc_bool( true );
 	}
 	DEFINE_PRIM( HypPlayServices_set_event_callback_multiplayers , 1 );
+
+	static value HypPlayServices_set_datas_callback_multiplayers( value onCall ){
+		eval_onDatas_multi = new AutoGCRoot( onCall );
+		return alloc_bool( true );
+	}
+	DEFINE_PRIM( HypPlayServices_set_datas_callback_multiplayers , 1 );
 
 // iPhone ---------------------------------------------------------------------------------------------------------
 

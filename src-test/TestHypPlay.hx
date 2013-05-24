@@ -96,7 +96,7 @@ class TestHypPlay extends Sprite{
 		*/
 		private function _buttons( ) : Void{
 			//var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
-			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM"];
+			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM","SEND_UNRELIABLE","SEND_RELIABLE"];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
@@ -129,6 +129,14 @@ class TestHypPlay extends Sprite{
 
 					case "WAITING_ROOM":
 						Multiplayers.showWaiting_room( );
+
+					case "SEND_UNRELIABLE":
+						trace("SEND_UNRELIABLE");
+						Multiplayers.sendString( "Test depuis haxe é'(-è_çà)'" );
+
+					case "SEND_RELIABLE":
+						trace("SEND_RELIABLE");
+						Multiplayers.sendString_reliable( "Test depuis haxe é'(-è_çà)'" );
 
 					/*
 
@@ -210,7 +218,8 @@ class TestHypPlay extends Sprite{
 
 			trace( desc );
 			trace( status );
-			Multiplayers.acceptInvitation( desc.sInvitation_id );
+			//Multiplayers.acceptInvitation( desc.sInvitation_id );
+			Multiplayers.openInvitations_inbox( );
 
 		}
 
