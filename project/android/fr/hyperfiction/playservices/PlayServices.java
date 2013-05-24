@@ -1,5 +1,6 @@
 package fr.hyperfiction.playservices;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +32,8 @@ class PlayServices{
 	final public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
 	final public static String SIGIN_SUCCESS		= "HypPS_SIGIN_SUCCESS";
 
+	final public static int ID_SETTINGS	= 5007;
+
 	public HypPlayServicesFrag frag;
 
 	private boolean _bInit = false;
@@ -48,6 +51,24 @@ class PlayServices{
 		}
 
 	// -------o public
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void openSettings( ){
+			trace("openSettings");
+			final Intent i = PlayHelper.getInstance( ).getGamesClient( ).getSettingsIntent( );
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+				new Runnable( ) {
+					public void run() {
+						PlayServices.getInstance( ).frag.startActivityForResult( i , ID_SETTINGS );
+					}
+				});
+		}
+
 
 		/**
 		*
@@ -154,7 +175,15 @@ class PlayServices{
 		* @return	void
 		*/
 		static public void signOut( ){
-			PlayHelper.getInstance( ).signOut( );
+			trace("signOut");
+			GameActivity.getInstance( ).runOnUiThread(
+					new Runnable( ) {
+						public void run() {
+							PlayHelper.getInstance( ).signOut( );
+						}
+					}
+				);
+
 		}
 
 	// -------o protected

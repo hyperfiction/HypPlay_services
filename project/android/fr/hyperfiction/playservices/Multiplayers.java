@@ -103,7 +103,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		static public void listenFor_invitations( ){
 			trace("listenFor_invitations");
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						trace("run");
@@ -298,8 +298,9 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			trace( "participants ::: "+_currentRoom.getParticipantIds( ) );
 			byte[] ba = sMessage.getBytes();
 			trace(" p ::: "+_currentRoom.getParticipants( ) );
+			String me =  _currentRoom.getParticipantId( getGamesClient( ).getCurrentPlayerId( ) );
 			for( Participant p : _currentRoom.getParticipants() )
-				if( p.getParticipantId( ) != getGamesClient( ).getCurrentPlayerId( ))
+				if( p.getParticipantId( ) != me )
 				getGamesClient( ).sendReliableRealTimeMessage(
 														getInstance( ),
 														ba,
@@ -325,7 +326,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 				return;
 
 			_currentRoom = room;
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						onEvent( ROOM_JOINED , _serializeRoom(room) , statusCode);
@@ -342,7 +343,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		public void onLeftRoom( final int statusCode , final String roomId ){
 			trace("onLeftRoom ::: ");
 			_currentRoom = null;
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						onEvent( ROOM_LEFT , roomId , statusCode);
@@ -358,7 +359,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		public void onRoomConnected( final int statusCode , final Room room ){
 			trace("onRoomConnected ::: ");
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						onEvent( ROOM_CONNECTED , _serializeRoom(room) , statusCode);
@@ -375,7 +376,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		public void onRoomCreated( final int statusCode , final Room room ){
 			trace("onRoomCreated ::: "+room);
 			_currentRoom = room;
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						onEvent( ROOM_CREATED , room != null ? _serializeRoom(room) : "" , statusCode);
@@ -584,7 +585,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static private void _runIntent( final Intent i , final int id ){
-			GameActivity.getInstance( ).runOnUiThread(
+			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						PlayServices.getInstance( ).frag.startActivityForResult( i , id );

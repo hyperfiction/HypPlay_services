@@ -129,7 +129,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
     boolean mSignedIn = false;
 
     // Print debug logs?
-    boolean mDebugLog = false;
+    boolean mDebugLog = true;
     String mDebugTag = "BaseGameActivity";
 
     // Messages (can be set by the developer).
@@ -177,9 +177,20 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
      * CLIENT_GAMES client.
      */
     public void setup(GameHelperListener listener) {
+        trace("setup ::: "+listener);
         setup(listener, CLIENT_GAMES);
     }
 
+    /*
+        *
+        *
+        * @private
+        * @return   void
+        */
+        public static void trace( String s ){
+            Log.w( TAG, s );
+        }
+        private static String TAG = "trace";//HypFacebook";
     /**
      * Performs setup on this GameHelper object. Call this from the onCreate()
      * method of your Activity. This will create the clients and do a few other
@@ -192,6 +203,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
      *            to request all clients.
      */
     public void setup(GameHelperListener listener, int clientsToUse) {
+        trace("setup ::: "+listener);
         mListener = listener;
         mRequestedClients = clientsToUse;
 
@@ -508,6 +520,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
     }
 
     void connectNextClient() {
+        trace("connectNextClient");
         // do we already have all the clients we need?
         int pendingClients = mRequestedClients & ~mConnectedClients;
         if (pendingClients == 0) {
@@ -537,8 +550,10 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
     }
 
     void connectCurrentClient() {
+        trace("connectCurrentClient ::: "+mClientCurrentlyConnecting);
         switch (mClientCurrentlyConnecting) {
             case CLIENT_GAMES:
+                trace("connect mGamesClient ");
                 mGamesClient.connect();
                 break;
             case CLIENT_APPSTATE:

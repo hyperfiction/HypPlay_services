@@ -96,7 +96,7 @@ class TestHypPlay extends Sprite{
 		*/
 		private function _buttons( ) : Void{
 			//var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
-			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM","SEND_UNRELIABLE","SEND_RELIABLE"];
+			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM","SEND_UNRELIABLE","SEND_RELIABLE","SETTINGS","SIGNOUT"];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
@@ -137,6 +137,12 @@ class TestHypPlay extends Sprite{
 					case "SEND_RELIABLE":
 						trace("SEND_RELIABLE");
 						Multiplayers.sendString_reliable( "Test depuis haxe é'(-è_çà)'" );
+
+					case "SETTINGS":
+						PlayServices.openSettings( );
+
+					case "SIGNOUT":
+						PlayServices.signOut( );
 
 					/*
 

@@ -21,7 +21,7 @@ Add the following metadata in to your application inside the <application/> node
 <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
 ````
 
-After your first compilation you need to edit the "ids.xml" file ( [YOUR_BIN_FOLDER]/android/bin/res/values/ids.xml)
+After your first NME compilation / update you need to edit the "ids.xml" file ( [YOUR_BIN_FOLDER]/android/bin/res/values/ids.xml)
 
 ```xml
 <string name="app_id">PUT YOUR PLAY SERVICES ID HERE</string>

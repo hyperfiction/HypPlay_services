@@ -163,6 +163,19 @@ class PlayServices{
 		#if android
 		@JNI
 		#end
+		static public function openSettings( ) : Void {
+			//getSettingsIntent
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
 		static public function signOut( ) : Void {
 
 		}
