@@ -16,16 +16,12 @@ Installation
 Android
 -------
 Add the following metadata in to your application inside the <application/> node.
+Fill the value with "\ " followed by your APP_ID.
 
 ```xml
-<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
+<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ 1234567891" />
 ````
 
-After your first NME compilation / update you need to edit the "ids.xml" file ( [YOUR_BIN_FOLDER]/android/bin/res/values/ids.xml)
-
-```xml
-<string name="app_id">PUT YOUR PLAY SERVICES ID HERE</string>
-````
 Recompiling
 -----------
 For recompiling the native extensions just use the sh files contained in the project folder

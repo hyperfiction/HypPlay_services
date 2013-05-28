@@ -1,5 +1,6 @@
 package fr.hyperfiction.playservices;
 
+import android.opengl.GLSurfaceView;
 import android.util.Log;
 
 import com.google.android.gms.games.achievement.OnAchievementUpdatedListener;
@@ -14,6 +15,7 @@ import com.google.example.games.basegameutils.GameHelper;
 import fr.hyperfiction.playservices.PlayServices;
 
 import org.json.JSONObject;
+import org.haxe.nme.GameActivity;
 
 /**
  * ...
@@ -24,6 +26,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 											OnLeaderboardMetadataLoadedListener ,
 											OnScoreSubmittedListener{
 
+	private static GLSurfaceView _mSurface;
 
 	// -------o constructor
 
@@ -35,6 +38,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		*/
 		private PlayHelper() {
 			super( org.haxe.nme.GameActivity.getInstance( ) );
+			_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
 		}
 
 	// -------o public
@@ -49,7 +53,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		*/
 		public void onAchievementUpdated( int statusCode, String achievementId ){
 			trace("onAchievementUpdated ::: "+statusCode);
-			PlayServices.onEvent( PlayServices.ON_ACHIEVEMENT_UPDATED , achievementId+"" , statusCode );
+			onEvent_wrapper( PlayServices.ON_ACHIEVEMENT_UPDATED , achievementId+"" , statusCode );
 		}
 
 		//Leaderboards -----------------------------------------------------------------------------------------
@@ -83,7 +87,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 			}
 
 			sRes += "]";
-			PlayServices.onEvent( PlayServices.ON_LEADERBOARD_METAS , sRes , statusCode );
+			onEvent_wrapper( PlayServices.ON_LEADERBOARD_METAS , sRes , statusCode );
 		}
 
 		/**
@@ -93,12 +97,20 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		* @return	void
 		*/
 		public void onScoreSubmitted(int statusCode, SubmitScoreResult result){
-			PlayServices.onEvent( PlayServices.ON_SCORE_SUBMITTED , result.toString( ) , statusCode );
+			onEvent_wrapper( PlayServices.ON_SCORE_SUBMITTED , result.toString( ) , statusCode );
 		}
 
 
 	// -------o protected
 
+		private void onEvent_wrapper( final String jsEvName , final String javaArg , final int statusCode ) {
+			_mSurface.queueEvent(new Runnable() {
+				@Override
+				public void run() {
+					PlayServices.onEvent( jsEvName, javaArg, statusCode );
+				}
+			});
+		}
 
 	// -------o misc
 

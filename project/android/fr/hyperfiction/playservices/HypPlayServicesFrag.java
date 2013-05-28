@@ -2,6 +2,7 @@ package fr.hyperfiction.playservices;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -28,6 +29,8 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		System.loadLibrary( "HypPlayServices" );
 	}
 
+	private static GLSurfaceView _mSurface;
+
 	// -------o constructor
 
 		/**
@@ -39,6 +42,7 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		public HypPlayServicesFrag( ){
 			super( );
 			trace("constructor");
+			_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
 		}
 
 	// -------o public
@@ -58,7 +62,7 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 			trace("onCreate");
 			super.onCreate( b );
 			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
-			onEvent( PlayServices.INIT , "" );
+			onEvent_wrapper( PlayServices.INIT , "" );
 		}
 
 		/**
@@ -69,7 +73,7 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		*/
 		public void onSignInFailed( ){
 			trace("onSignInFailed");
-			onEvent( PlayServices.SIGIN_FAILED , "" );
+			onEvent_wrapper( PlayServices.SIGIN_FAILED , "" );
 		}
 
 		/**
@@ -80,7 +84,7 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		*/
 		public void onSignInSucceeded( ){
 			trace("onSignInSucceeded");
-			onEvent( PlayServices.SIGIN_SUCCESS , "" );
+			onEvent_wrapper( PlayServices.SIGIN_SUCCESS , "" );
 		}
 
 		public void onActivityResult (int requestCode, int resultCode, Intent datas ){
@@ -96,6 +100,15 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 					break;
 
 			}
+		}
+
+		private void onEvent_wrapper( final String jsEvName , final String javaArg  ) {
+			_mSurface.queueEvent(new Runnable() {
+				@Override
+				public void run() {
+					onEvent( jsEvName, javaArg );
+				}
+			});
 		}
 
 	// -------o misc

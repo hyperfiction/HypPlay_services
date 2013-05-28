@@ -1,5 +1,6 @@
 package fr.hyperfiction.playservices;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -7,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import fr.hyperfiction.playservices.PlayHelper;
 import fr.hyperfiction.playservices.HypPlayServicesFrag;
 
@@ -17,7 +20,7 @@ import org.haxe.nme.GameActivity;
  * @author shoe[box]
  */
 
-class PlayServices{
+public class PlayServices{
 
 	static public native void onEvent( String jsEvName , String javaArg , int statusCode );
 	static{
@@ -33,6 +36,7 @@ class PlayServices{
 	final public static String SIGIN_SUCCESS		= "HypPS_SIGIN_SUCCESS";
 
 	final public static int ID_SETTINGS	= 5007;
+	final public static int ID_ERROR_POPUP	= 6000;
 
 	public HypPlayServicesFrag frag;
 
@@ -117,8 +121,33 @@ class PlayServices{
 		* @public
 		* @return	void
 		*/
-		static public boolean isAvailable( ){
-			return false; //TODO
+		static public String getUser_id( ){
+			return PlayHelper.getInstance( ).getPlusClient( ).getCurrentPerson( ).getId( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public int isAvailable( ){
+
+			final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable( GameActivity.getContext( ) );
+			if(resultCode != ConnectionResult.SUCCESS){
+				PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+				new Runnable( ) {
+					public void run() {
+						Dialog 	dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, GameActivity.getInstance( ), ID_ERROR_POPUP );
+								dialog.setCancelable(false);
+								dialog.show();
+					}
+				});
+
+			}
+
+
+			return resultCode;
 		}
 
 		/**

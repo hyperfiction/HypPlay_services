@@ -7,9 +7,9 @@ package fr.hyperfiction.playservices;
 
 class StatusCode{
 
-	private static inline var STATUS_OK							: Int = 0x00000000;
+	private static inline var STATUS_OK						: Int = 0x00000000;
 	private static inline var STATUS_PARTICIPANT_NOT_CONNECTED		: Int = 0x00001b5b;
-	private static inline var STATUS_REAL_TIME_CONNECTION_FAILED		: Int = 0x00001b58;
+	private static inline var STATUS_REAL_TIME_CONNECTION_FAILED	: Int = 0x00001b58;
 	private static inline var STATUS_REAL_TIME_INACTIVE_ROOM		: Int = 0x00001b5d;
 	private static inline var STATUS_REAL_TIME_MESSAGE_FAILED		: Int = 0xffffffff;
 	private static inline var STATUS_REAL_TIME_MESSAGE_SEND_FAILED	: Int = 0x00001b59;

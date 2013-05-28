@@ -96,7 +96,7 @@ class TestHypPlay extends Sprite{
 		*/
 		private function _buttons( ) : Void{
 			//var a : Array<String> = [ "INVITE","QUICK_GAME", "ACHIEVEMENT" , "ACHIEVEMENT_INC" , "UNLOCK_ACHIEVEMENT" , "LEADERBOARD" , "ALL_LEADERBOARDS" , "SUBMIT_SCORE"];
-			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM","SEND_UNRELIABLE","SEND_RELIABLE","SETTINGS","SIGNOUT"];
+			var a : Array<String> = [ "INVITE","INVITATION_INBOX","QUICK_GAME","WAITING_ROOM","ACHIEVEMENT","SEND_RELIABLE","LEADERBOARD","ALL_LEADERBOARDS","SIGNOUT"];
 
 			var inc = 0;
 			var spContainer = new Sprite( );
@@ -144,7 +144,7 @@ class TestHypPlay extends Sprite{
 					case "SIGNOUT":
 						PlayServices.signOut( );
 
-					/*
+
 
 
 					case "ACHIEVEMENT":
@@ -179,8 +179,8 @@ class TestHypPlay extends Sprite{
 
 					case "LEAVE_ROOM":
 						trace("leaveRoom ::: "+_sRoom);
-						Multiplayers.leaveRoom( _sRoom );
-					*/
+						//Multiplayers.leaveRoom( _sRoom );
+
 				}
 
 			});

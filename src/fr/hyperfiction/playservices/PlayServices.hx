@@ -84,7 +84,7 @@ class PlayServices{
 		@JNI
 		#end
 		static public function getCurrent_account_name( ) : String{
-
+			return "";
 		}
 
 		/**
@@ -93,14 +93,26 @@ class PlayServices{
 		* @public
 		* @return	void
 		*/
-		/*
 		#if android
 		@JNI
 		#end
-		static public function isAvailable( ) : Bool {
-			return true;
+		static public function getUser_id( ) : String {
+			return "";
 		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
 		*/
+		#if android
+		@JNI
+		#end
+		static public function isAvailable( ) : Int {
+			return -1;
+		}
+
 
 		/**
 		*

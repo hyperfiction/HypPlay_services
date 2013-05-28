@@ -14,6 +14,7 @@
 		<template path="/templates/android/libs" rename="libs" if="android"/>
 		<template path="/templates/android/libs" rename="libs" if="android"/>
 		<template path="/templates/android/src" rename="src" if="android"/>
+		<template path="/templates/android/R.java" rename="gen/com/google/android/gms/R.java" if="android"/>
 
 	<!-- flash -->
 
