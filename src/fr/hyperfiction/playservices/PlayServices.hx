@@ -97,7 +97,7 @@ class PlayServices{
 		@JNI
 		#end
 		static public function getUser_id( ) : String {
-			return "";
+			return "G+USERID";
 		}
 
 		/**

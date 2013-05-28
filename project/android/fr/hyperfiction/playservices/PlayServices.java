@@ -122,7 +122,7 @@ public class PlayServices{
 		* @return	void
 		*/
 		static public String getUser_id( ){
-			return PlayHelper.getInstance( ).getPlusClient( ).getCurrentPerson( ).getId( );
+			return PlayHelper.getInstance( ).getGamesClient( ).getCurrentPlayerId( );
 		}
 
 		/**
