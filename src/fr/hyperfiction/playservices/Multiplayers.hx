@@ -13,9 +13,11 @@ class Multiplayers{
 	static public var onDatas		: String->String->Void;
 	static public var onEvent		: String->RoomDesc->Status->Void;
 	static public var onInvitation	: String->InvitationDesc->Status->Void;
+	static public var onStatus		: String->String->Status->Void;
 
 	public static inline var ON_INVITATION	: String = "HypPS_ON_INVITATION";
 	public static inline var ON_MESSAGE	: String = "HypPS_ON_MESSAGE";
+	public static inline var INVITE_SENT	: String = "HypPS_INVITE_SENT";
 	public static inline var INVITE_CANCEL	: String = "HypPS_INVITE_CANCEL";
 	public static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
 	public static inline var ROOM_CREATED	: String = "HypPS_ROOM_CREATED";
@@ -227,9 +229,6 @@ class Multiplayers{
 					trace("ON_INVITATION ::: "+sArg);
 					onInvitation( sEvent , Json.parse( sArg ) , s );
 
-				case INVITE_CANCEL:
-					trace("INVITE_CANCEL ::: "+s);
-
 				case ROOM_CREATED:
 					trace( "ROOM_CREATED ::: "+sArg);
 					if( sArg == "" || sArg == null )
@@ -241,7 +240,8 @@ class Multiplayers{
 					onDatas( sEvent , sArg );
 
 				default:
-
+					if( onStatus != null )
+						onStatus( sEvent , sArg , s );
 
 			}
 		}

@@ -57,6 +57,19 @@ class PlayServices{
 		#if android
 		@JNI
 		#end
+		static public function connect( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
 		static public function clearAllNotifications( ) : Void {
 
 		}

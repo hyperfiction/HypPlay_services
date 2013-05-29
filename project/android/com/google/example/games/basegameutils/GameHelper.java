@@ -130,7 +130,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
 
     // Print debug logs?
     boolean mDebugLog = true;
-    String mDebugTag = "BaseGameActivity";
+    String mDebugTag = "trace";
 
     // Messages (can be set by the developer).
     String mSigningInMessage = "";

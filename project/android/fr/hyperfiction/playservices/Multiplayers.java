@@ -47,6 +47,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	}
 
 	final public static String INVITE_CANCEL	= "HypPS_INVITE_CANCEL";
+	final public static String INVITE_SENT		= "HypPS_INVITE_SENT";
 	final public static String INVITE_USERS		= "HypPS_INVITE_USERS";
 	final public static String ON_INVITATION	= "HypPS_ON_INVITATION";
 	final public static String ON_MESSAGE		= "HypPS_ON_INVITATION";
@@ -165,7 +166,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 				if( resultCode != Activity.RESULT_OK ){
 					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
 					return;
-				}
+				}else
+					onEvent_wrapper( INVITE_SENT , "" , resultCode);
 
 			//
 				Bundle extras = datas.getExtras( );

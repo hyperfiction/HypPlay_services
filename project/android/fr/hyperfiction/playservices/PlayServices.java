@@ -91,6 +91,24 @@ public class PlayServices{
 		* @public
 		* @return	void
 		*/
+		static public void connect( ){
+			trace("connect");
+			//PlayHelper.getInstance( ).getGamesClient( ).connect( );
+
+			GameActivity.getInstance( ).runOnUiThread(
+				new Runnable( ) {
+					public void run() {
+						PlayHelper.getInstance( ).onStart( GameActivity.getInstance( ) );
+					}
+				});
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public void clearAllNotifications( ){
 			PlayHelper.getInstance( ).getGamesClient( ).clearAllNotifications( );
 		}
