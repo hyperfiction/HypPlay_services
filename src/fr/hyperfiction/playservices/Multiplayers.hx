@@ -216,8 +216,9 @@ class Multiplayers{
 		* @return	void
 		*/
 		static private function _onMultiplayers_event( sEvent : String , sArg : String , iCode : Int ) : Void{
-			trace("_onMultiplayer_event ::: "+sEvent);
-
+			trace("_onMultiplayer_event ::: "+sEvent+" - "+iCode);
+			trace("onEvent ::: "+onEvent);
+			trace("onInvitation ::: "+onInvitation);
 			var s : Status = StatusCode.translate( iCode );
 			trace("s ::: "+s);
 			switch( sEvent ){
@@ -231,7 +232,10 @@ class Multiplayers{
 
 				case ROOM_CREATED:
 					trace( "ROOM_CREATED ::: "+sArg);
-					onEvent( sEvent , Json.parse( sArg) , s );
+					if( sArg == "" || sArg == null )
+						onEvent( sEvent , null , s );
+					else
+						onEvent( sEvent , Json.parse( sArg ) , s );
 
 				case ON_MESSAGE:
 					onDatas( sEvent , sArg );

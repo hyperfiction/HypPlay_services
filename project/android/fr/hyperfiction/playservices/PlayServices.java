@@ -158,6 +158,7 @@ public class PlayServices{
 		*/
 		static public void beginUserInitiated_sign_in( ){
 			trace("beginUserInitiatedSignIn");
+
 			GameActivity.getInstance( ).runOnUiThread(
 					new Runnable( ) {
 						public void run() {
@@ -165,6 +166,7 @@ public class PlayServices{
 						}
 					}
 				);
+
 		}
 
 		/**

@@ -7,6 +7,7 @@ package fr.hyperfiction.playservices;
 
 class StatusCode{
 
+	private static inline var STATUS_NETWORK_ERROR_OPERATION_FAILED	: Int = 0x00000006;
 	private static inline var STATUS_OK						: Int = 0x00000000;
 	private static inline var STATUS_PARTICIPANT_NOT_CONNECTED		: Int = 0x00001b5b;
 	private static inline var STATUS_REAL_TIME_CONNECTION_FAILED	: Int = 0x00001b58;
@@ -60,6 +61,9 @@ class StatusCode{
 				case STATUS_REAL_TIME_ROOM_NOT_JOINED:
 					REAL_TIME_ROOM_NOT_JOINED;
 
+				case STATUS_NETWORK_ERROR_OPERATION_FAILED:
+					NETWORK_ERROR_OPERATION_FAILED;
+
 
 
 			};
@@ -82,4 +86,5 @@ enum Status{
 	REAL_TIME_MESSAGE_FAILED;
 	REAL_TIME_MESSAGE_SEND_FAILED;
 	REAL_TIME_ROOM_NOT_JOINED;
+	NETWORK_ERROR_OPERATION_FAILED;
 }

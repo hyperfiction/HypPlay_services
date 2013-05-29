@@ -759,12 +759,13 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
     }
 
     void debugLog(String message) {
-        if (mDebugLog)
+        //if (mDebugLog)
             Log.d(mDebugTag, message);
     }
 
     @Override
     public void onSignOutComplete() {
+        trace("onSignOutComplete");
         dismissDialog();
         if (mGamesClient.isConnected())
             mGamesClient.disconnect();
