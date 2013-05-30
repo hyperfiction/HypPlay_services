@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<app title="TestHypPlay" file="TestHypPlay" main="TestHypPlay" package="fr.hyperfiction.test" version="1.0.0" company="Hyperfiction" debug="true"/>
+
+	<window width="1024" height="768" fps="60" orientation="portrait" resizable="true" if="target_flash" background="0xAAAAAA"/>
+	<window width="1024" height="768" fps="60" orientation="portrait" resizable="true" unless="target_flash" background="0xAAAAAA"/>
+
+	<set name="BUILD_DIR" value="bin-debug" />
+		<set name="SWF_VERSION" value="10.1" />
+
+	<classpath name="src-test" />
+	<!--
+	<classpath name="../inthebox/src/" />
+	-->
+	<haxelib name="actuate" />
+	<haxelib name="nme" />
+	<haxedef name="cpp" if="ios"/>
+	<haxedef name="cpp" if="android"/>
+
+	<!--<assets path="Assets" rename="assets" include="*" exclude="*.fla"/>-->
+
+
+	<ndll name="std" />
+	<ndll name="regexp" />
+	<ndll name="zlib" />
+	<ndll name="nme" haxelib="nme" />
+
+	<include path="../HypPlay_services"/>
+
+	<ios deployment="4.3" binaries="armv7" compiler="gcc" if="ios"/>
+
+
+	<set name="SHOW_CONSOLE" value="1" />
+	<haxedef name="SHOW_CONSOLE"/>
+
+
+	<icon name="Assets/hypicon.svg" />
+
+	<section if="windows">
+		<section if="debugger">
+			<haxelib name="hxcpp" />
+			<haxedef name="HXCPP_DEBUGGER"/>
+			<haxedef name="HXCPP_DEBUG_LINK"/>
+			<haxedef name="DHXCPP_STACK_TRACE"/>
+			<haxedef name="HXCPP_STACK_LINE"/>
+			<haxedef name="HXCPP_CHECK_POINTER"/>
+		</section>
+	</section>
+
+	<template path="AndroidManifest.xml" rename="AndroidManifest.xml"/>
+
+</project>
