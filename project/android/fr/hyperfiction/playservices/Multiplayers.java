@@ -197,6 +197,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
 					return;
 				}
+				onEvent_wrapper( INVITE_SENT , "" , resultCode);
 
 			//The invitess list
 				final ArrayList<String> invitees = datas.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
