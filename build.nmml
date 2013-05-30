@@ -14,7 +14,9 @@
 	<classpath name="../inthebox/src/" />
 	-->
 	<haxelib name="actuate" />
-	<haxelib name="nme" />
+	<haxelib name="openfl" />
+	<haxelib name="openfl-compatibility" />
+	<haxelib name="openfl-native" />
 	<haxedef name="cpp" if="ios"/>
 	<haxedef name="cpp" if="android"/>
 
@@ -24,8 +26,9 @@
 	<ndll name="std" />
 	<ndll name="regexp" />
 	<ndll name="zlib" />
+	<!--
 	<ndll name="nme" haxelib="nme" />
-
+	-->
 	<include path="../HypPlay_services"/>
 
 	<ios deployment="4.3" binaries="armv7" compiler="gcc" if="ios"/>
