@@ -2,6 +2,7 @@ package fr.hyperfiction.playservices;
 
 import android.util.Log;
 import fr.hyperfiction.playservices.PlayHelper;
+import fr.hyperfiction.playservices.PlayServicesFrag;
 import org.haxe.nme.GameActivity;
 
 /**
@@ -32,7 +33,7 @@ class Achievements{
 		* @return	void
 		*/
 		static public void open( ){
-			GameActivity.getInstance( ).startActivityForResult( PlayHelper.getInstance( ).getGamesClient( ).getAchievementsIntent( ), 5002 );
+			PlayServicesFrag.getInstance( ).startActivityForResult( PlayHelper.getInstance( ).getGamesClient( ).getAchievementsIntent( ), 5002 );
 		}
 
 		/**

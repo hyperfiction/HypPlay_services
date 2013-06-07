@@ -1,5 +1,6 @@
 package fr.hyperfiction.playservices;
 
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import com.google.android.gms.games.leaderboard.SubmitScoreResult;
 import com.google.example.games.basegameutils.GameHelper;
 
 import fr.hyperfiction.playservices.PlayServices;
+import fr.hyperfiction.playservices.Multiplayers;
 
 import org.json.JSONObject;
 import org.haxe.nme.GameActivity;
@@ -54,6 +56,36 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		public void onAchievementUpdated( int statusCode, String achievementId ){
 			trace("onAchievementUpdated ::: "+statusCode);
 			onEvent_wrapper( PlayServices.ON_ACHIEVEMENT_UPDATED , achievementId+"" , statusCode );
+		}
+
+		//Activity Results -----------------------------------------------------------------------------------------
+
+		/**
+		* Handle activity result. Call this method from your Activity's
+		* onActivityResult callback. If the activity result pertains to the sign-in
+		* process, processes it appropriately.
+		*/
+		@Override
+		public void onActivityResult(int requestCode, int responseCode, Intent intent) {
+			super.onActivityResult( requestCode , responseCode , intent );
+			trace("onActivityResult ::: "+requestCode+" - "+responseCode+" - "+intent);
+
+			switch( requestCode ){
+
+				case Multiplayers.ID_INVITE_INTENT:
+					Multiplayers.handleInvitation_results( responseCode , intent );
+					break;
+
+				case Multiplayers.ID_INVITATIONS_INBOX:
+					Multiplayers.handleInvitation_select( responseCode , intent );
+					break;
+
+				case Multiplayers.ID_WAIT_INTENT:
+					Multiplayers.handleWaitingroom_results( responseCode , intent );
+
+			}
+
+
 		}
 
 		//Leaderboards -----------------------------------------------------------------------------------------
@@ -104,7 +136,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 	// -------o protected
 
 		private void onEvent_wrapper( final String jsEvName , final String javaArg , final int statusCode ) {
-			_mSurface.queueEvent(new Runnable() {
+			GameActivity.getInstance( ).runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					PlayServices.onEvent( jsEvName, javaArg, statusCode );
@@ -115,7 +147,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 	// -------o misc
 
 		public static PlayHelper getInstance( ){
-			trace("getInstance");
+
 			if( __instance == null )
 				__instance = new PlayHelper( );
 
@@ -125,7 +157,7 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		private static PlayHelper __instance;
 
 		public static void trace( String s ){
-			Log.w( TAG, s );
+			Log.w( TAG, "PlayHelper ::: "+s );
 		}
 		private static String TAG = "trace";//HypFacebook";
 }

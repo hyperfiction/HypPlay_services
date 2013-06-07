@@ -2,25 +2,29 @@ package fr.hyperfiction.playservices;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.opengl.GLSurfaceView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.google.example.games.basegameutils.GameHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import fr.hyperfiction.playservices.PlayServicesFrag;
 import fr.hyperfiction.playservices.PlayHelper;
-import fr.hyperfiction.playservices.HypPlayServicesFrag;
 
 import org.haxe.nme.GameActivity;
+import org.haxe.nme.HaxeObject;
 
 /**
  * ...
  * @author shoe[box]
  */
 
-public class PlayServices{
+public class PlayServices implements GameHelper.GameHelperListener{
 
 	static public native void onEvent( String jsEvName , String javaArg , int statusCode );
 	static{
@@ -38,8 +42,9 @@ public class PlayServices{
 	final public static int ID_SETTINGS	= 5007;
 	final public static int ID_ERROR_POPUP	= 6000;
 
-	public HypPlayServicesFrag frag;
+	public static HaxeObject haxeCallback;
 
+	private static GLSurfaceView _mSurface;
 	private boolean _bInit = false;
 
 	// -------o constructor
@@ -56,6 +61,7 @@ public class PlayServices{
 
 	// -------o public
 
+
 		/**
 		*
 		*
@@ -65,10 +71,10 @@ public class PlayServices{
 		static public void openSettings( ){
 			trace("openSettings");
 			final Intent i = PlayHelper.getInstance( ).getGamesClient( ).getSettingsIntent( );
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+			GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
-						PlayServices.getInstance( ).frag.startActivityForResult( i , ID_SETTINGS );
+						GameActivity.getInstance( ).startActivityForResult( i , ID_SETTINGS );
 					}
 				});
 		}
@@ -80,9 +86,11 @@ public class PlayServices{
 		* @public
 		* @return	void
 		*/
-		static public void initialize( ){
-			trace("initialize");
+		static public void initialize( HaxeObject cb ){
+			trace("initialize ::: "+cb);
+			haxeCallback = cb;
 			getInstance( )._init( );
+			onEvent( PlayServices.INIT , "" , 0 );
 		}
 
 		/**
@@ -139,6 +147,16 @@ public class PlayServices{
 		* @public
 		* @return	void
 		*/
+		static public String getDisplay_name( ){
+			return PlayHelper.getInstance( ).getGamesClient( ).getCurrentPlayer( ).getDisplayName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public String getUser_id( ){
 			return PlayHelper.getInstance( ).getGamesClient( ).getCurrentPlayerId( );
 		}
@@ -153,7 +171,7 @@ public class PlayServices{
 
 			final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable( GameActivity.getContext( ) );
 			if(resultCode != ConnectionResult.SUCCESS){
-				PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+				GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						Dialog 	dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, GameActivity.getInstance( ), ID_ERROR_POPUP );
@@ -180,6 +198,7 @@ public class PlayServices{
 			GameActivity.getInstance( ).runOnUiThread(
 					new Runnable( ) {
 						public void run() {
+							trace("run");
 							PlayHelper.getInstance( ).beginUserInitiatedSignIn( );
 						}
 					}
@@ -194,6 +213,7 @@ public class PlayServices{
 		* @return	void
 		*/
 		static public boolean isSigned_in( ){
+			trace("isSignedIn");
 			return PlayHelper.getInstance( ).isSignedIn( );
 		}
 
@@ -235,6 +255,48 @@ public class PlayServices{
 
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public void onSignInFailed( ){
+			trace("onSignInFailed");
+			dispatchEvent( PlayServices.SIGIN_FAILED , "" , 0 );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public void onSignInSucceeded( ){
+			trace("onSignInSucceeded");
+			dispatchEvent( PlayServices.SIGIN_SUCCESS , "" , 0 );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void dispatchEvent( final String jsEvName , final String javaArg , final int statusCode  ) {
+			//PlayServices.haxeCallback.call3("onEvent",jsEvName,javaArg,0);
+			//onEvent( jsEvName, javaArg );
+
+			if( _mSurface == null )
+				_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
+				_mSurface.queueEvent(new Runnable() {
+					@Override
+					public void run() {
+						onEvent( jsEvName, javaArg , statusCode );
+					}
+				});
+		}
+
 	// -------o protected
 
 		/**
@@ -251,22 +313,24 @@ public class PlayServices{
 
 			_bInit = true;
 
-			GameActivity.getInstance( ).runOnUiThread(
-				new Runnable(){
-					@Override
-					public void run() {
-						trace("run");
-						frag = new HypPlayServicesFrag( );
-						FragmentActivity fa = (FragmentActivity) GameActivity.getInstance( );
+				GameActivity.getInstance( ).runOnUiThread(
+					new Runnable(){
+						@Override
+						public void run() {
+							trace("run");
+							FragmentActivity fa = (FragmentActivity) GameActivity.getInstance( );
 
-						FragmentTransaction ft = GameActivity.getInstance( ).getSupportFragmentManager( ).beginTransaction( );
-										ft.add( android.R.id.content , frag );
-										ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-										ft.addToBackStack( null );
-										ft.commit( );
+							FragmentTransaction ft = GameActivity.getInstance( ).getSupportFragmentManager( ).beginTransaction( );
+											ft.add( android.R.id.content , PlayServicesFrag.getInstance( ) );
+											ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+											ft.addToBackStack( null );
+											ft.commit( );
+						}
 					}
-				}
-			);
+				);
+
+			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
+
 		}
 
 	// -------o misc

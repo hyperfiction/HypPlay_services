@@ -151,6 +151,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
      * method of your Activity.
      */
     public GameHelper(Activity activity) {
+        trace("constructor");
         mActivity = activity;
     }
 
@@ -419,7 +420,9 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
      * process, processes it appropriately.
      */
     public void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        debugLog("onActivityResult");
         if (requestCode == RC_RESOLVE) {
+
             // We're coming back from an activity that was launched to resolve a
             // connection
             // problem. For example, the sign-in UI.

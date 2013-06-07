@@ -11,6 +11,7 @@ import com.google.example.games.basegameutils.GameHelper;
 
 import fr.hyperfiction.playservices.Multiplayers;
 import fr.hyperfiction.playservices.PlayHelper;
+import fr.hyperfiction.playservices.PlayServices;
 
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ import org.haxe.nme.GameActivity;
  * @author shoe[box]
  */
 
-public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelperListener{
+public class PlayServicesFrag extends Fragment{
 
 	static public native void onEvent( String jsEvName , String javaArg );
 	static{
@@ -39,7 +40,7 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		* @param
 		* @return	void
 		*/
-		public HypPlayServicesFrag( ){
+		public PlayServicesFrag( ){
 			super( );
 			trace("constructor");
 			_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
@@ -61,34 +62,12 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		public void onCreate( Bundle b ){
 			trace("onCreate");
 			super.onCreate( b );
-			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
-			onEvent_wrapper( PlayServices.INIT , "" );
+			PlayServices.dispatchEvent( PlayServices.INIT , "" , 0 );
 		}
 
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		public void onSignInFailed( ){
-			trace("onSignInFailed");
-			onEvent_wrapper( PlayServices.SIGIN_FAILED , "" );
-		}
-
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		public void onSignInSucceeded( ){
-			trace("onSignInSucceeded");
-			onEvent_wrapper( PlayServices.SIGIN_SUCCESS , "" );
-		}
-
-		public void onActivityResult (int requestCode, int resultCode, Intent datas ){
+		public void onActivityResult (int requestCode, int res, Intent datas ){
 			trace("onActivityResult ::: "+requestCode);
+			/*
 			switch( requestCode ){
 
 				case Multiplayers.ID_INVITE_INTENT:
@@ -100,6 +79,9 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 					break;
 
 			}
+			*/
+
+			PlayHelper.getInstance( ).onActivityResult( requestCode , res , datas );
 		}
 
 		private void onEvent_wrapper( final String jsEvName , final String javaArg  ) {
@@ -120,8 +102,25 @@ public class HypPlayServicesFrag extends Fragment implements GameHelper.GameHelp
 		* @return	void
 		*/
 		public static void trace( String s ){
-			Log.w( TAG, "HypPlayServicesFrag:::"+s );
+			Log.w( TAG, "PlayServicesFrag:::"+s );
 		}
 
 		private static String TAG = "trace";//HypFacebook";
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public static PlayServicesFrag getInstance( ){
+
+			if( __instance == null )
+				__instance = new PlayServicesFrag( );
+
+			return __instance;
+
+		}
+
+		private static PlayServicesFrag __instance = null;
 }

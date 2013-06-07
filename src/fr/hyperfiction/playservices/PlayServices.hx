@@ -1,7 +1,11 @@
 package fr.hyperfiction.playservices;
 
+import fr.hyperfiction.playservices.events.SigninEvent;
 import fr.hyperfiction.playservices.Multiplayers;
 import haxe.Json;
+
+import nme.events.Event;
+import nme.events.EventDispatcher;
 
 /**
  * ...
@@ -10,16 +14,17 @@ import haxe.Json;
 @:build( ShortCuts.mirrors( ) )
 class PlayServices{
 
-	static public var onStatus : String->String->Int->Void;
-	static public var onLeaderboard_metas : Array<LeaderboardMetas>->Void;
+	static public var onEvent : EventDispatcher = new EventDispatcher( );
 
-	static public inline var INIT					: String = "HypPS_INIT";
-	static public inline var ON_ACHIEVEMENT_UPDATED	: String = "HypPS_ON_ACHIEVEMENT_UPDATED";
-	static public inline var ON_INVITATION			: String = "HypPS_ON_INVITATION";
-	static public inline var ON_LEADERBOARD_METAS	: String = "HypPS_ON_LEADERBOARD_METAS";
-	static public inline var ON_SCORE_SUBMITTED		: String = "HypPS_ON_SCORE_SUBMITTED";
-	static public inline var SIGIN_FAILED			: String = "HypPS_SIGIN_FAILED";
-	static public inline var SIGIN_SUCCESS			: String = "HypPS_SIGIN_SUCCESS";
+	static private inline var INIT				: String = "HypPS_INIT";
+	static private inline var ON_ACHIEVEMENT_UPDATED	: String = "HypPS_ON_ACHIEVEMENT_UPDATED";
+	static private inline var ON_INVITATION			: String = "HypPS_ON_INVITATION";
+	static private inline var ON_LEADERBOARD_METAS	: String = "HypPS_ON_LEADERBOARD_METAS";
+	static private inline var ON_SCORE_SUBMITTED		: String = "HypPS_ON_SCORE_SUBMITTED";
+	static private inline var SIGIN_FAILED			: String = "HypPS_SIGIN_FAILED";
+	static private inline var SIGIN_SUCCESS			: String = "HypPS_SIGIN_SUCCESS";
+
+	static private var _listener : HaxeObject;
 
 	// -------o constructor
 
@@ -43,9 +48,12 @@ class PlayServices{
 		*/
 		static public function initialize( ) : Void {
 			trace("initalize");
+
 			_setCallback( _onCallback );
 			Multiplayers.initialize( );
-			_initialize( );
+			_listener = new HaxeObject( );
+			_listener.onEvent = _onEvent;
+			_initialize( _listener );
 		}
 
 		/**
@@ -97,6 +105,19 @@ class PlayServices{
 		@JNI
 		#end
 		static public function getCurrent_account_name( ) : String{
+			return "";
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getDisplay_name( ) : String {
 			return "";
 		}
 
@@ -216,7 +237,7 @@ class PlayServices{
 		#if android
 		@JNI("fr.hyperfiction.playservices.PlayServices","initialize")
 		#end
-		static private function _initialize( ) : Void{
+		static private function _initialize( cb : HaxeObject ) : Void{
 
 		}
 
@@ -244,15 +265,45 @@ class PlayServices{
 
 			switch( s ){
 
-				case ON_LEADERBOARD_METAS:
-					onLeaderboard_metas( Json.parse( sArg ) );
+				case INIT:
+					onEvent.dispatchEvent( new Event( Event.INIT ));
+
+				case SIGIN_SUCCESS:
+					onEvent.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
+
+				case SIGIN_FAILED:
+					onEvent.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
 
 				default:
-					if( onStatus != null )
-						onStatus( s , sArg , iStatus );
+					//if( onStatus != null )
+					//	onStatus( s , sArg , iStatus );
 
 			}
 
+
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		static private function _onEvent( sType : String , sArg : String , iStatus : Int ) : Void{
+
+			switch( sType ){
+
+				case INIT:
+					onEvent.dispatchEvent( new Event( Event.INIT ));
+
+				case SIGIN_SUCCESS:
+					onEvent.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
+
+				case SIGIN_FAILED:
+					onEvent.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
+
+
+			}
 
 		}
 
@@ -260,9 +311,38 @@ class PlayServices{
 
 }
 
+
 typedef LeaderboardMetas={
 	public var displayName	: String;
 	public var iconUri		: String;
 	public var id			: String;
 	public var scoreOrder	: Int;
+}
+
+class HaxeObject{
+
+	public var onEvent : String->String->Int->Void;
+
+	// -------o constructor
+
+		/**
+		* constructor
+		*
+		* @param
+		* @return	void
+		*/
+		public function new() {
+
+		}
+
+	// -------o public
+
+
+
+	// -------o protected
+
+
+
+	// -------o misc
+
 }

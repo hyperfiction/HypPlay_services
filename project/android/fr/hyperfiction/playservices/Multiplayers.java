@@ -21,12 +21,14 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.gson.Gson;
 
 import fr.hyperfiction.playservices.PlayHelper;
+import fr.hyperfiction.playservices.PlayServicesFrag;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.haxe.nme.GameActivity;
+import org.haxe.nme.HaxeObject;
 import org.json.JSONObject;
 
 /**
@@ -40,12 +42,14 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 						RoomStatusUpdateListener,
 						RoomUpdateListener{
 
-	static public native void onEvent( String jsEvName , String javaArg , int statusCode );
-	static public native void onDatas( String sDatas , String sFrom );
+	static public native int onEvent( String jsEvName , String javaArg , int statusCode );
+	static public native int onDatas( String sDatas , String sFrom );
 	static{
 		System.loadLibrary( "HypPlayServices" );
 	}
 
+	final public static String GAME_START		= "HypPS_GAME_START";
+	final public static String INVITE_ACCEPTED	= "HypPS_INVITE_ACCEPTED";
 	final public static String INVITE_CANCEL	= "HypPS_INVITE_CANCEL";
 	final public static String INVITE_SENT		= "HypPS_INVITE_SENT";
 	final public static String INVITE_USERS		= "HypPS_INVITE_USERS";
@@ -70,8 +74,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	private static Room _currentRoom;
 	private static int _iMinOpp;
 	private static int _iMaxOpp;
-
-
+	private static HaxeObject _hxListener;
 
 	// -------o constructor
 
@@ -93,6 +96,16 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
+		static public void initialize( HaxeObject hxListener ){
+			_hxListener = hxListener;
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public String checkFor_invitations( ){
 			trace("checkFor_invitations");
 			return PlayHelper.getInstance( ).getInvitationId( );
@@ -106,7 +119,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		static public void listenFor_invitations( ){
 			trace("listenFor_invitations");
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+			GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
 						trace("run");
@@ -150,7 +163,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static public void openInvitations_inbox( ){
-			_runIntent( getGamesClient().getInvitationInboxIntent() , ID_INVITATIONS_INBOX );
+			trace("openInvitations_inbox");
+			_runIntent( getGamesClient( ).getInvitationInboxIntent( ) , ID_INVITATIONS_INBOX );
 		}
 
 		/**
@@ -167,7 +181,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
 					return;
 				}else
-					onEvent_wrapper( INVITE_SENT , "" , resultCode);
+					onEvent_wrapper( INVITE_ACCEPTED , "" , resultCode);
 
 			//
 				Bundle extras = datas.getExtras( );
@@ -237,6 +251,23 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
+		static public void handleWaitingroom_results( int resultCode , Intent datas ){
+			trace("resultCode ::: "+resultCode+" - "+datas);
+			if (resultCode == Activity.RESULT_OK) {
+				trace("handleWaitingroom_results:::RESULT_OK");
+				onEvent_wrapper( GAME_START , "" , resultCode );
+			}else if (resultCode == Activity.RESULT_CANCELED) {
+				trace("handleWaitingroom_results::::RESULT_CANCELED");
+				onEvent_wrapper( INVITE_CANCEL , "" , resultCode );
+			}
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public void quickGame( int iMin , int iMax ){
 
 			//Automatch criteria
@@ -269,7 +300,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
-		static public void showWaiting_room( ){
+		static public void openWaiting_room( ){
 			Intent i = getGamesClient().getRealTimeWaitingRoomIntent( _currentRoom , Integer.MAX_VALUE );
 			_runIntent( i , ID_WAIT_INTENT );
 		}
@@ -325,18 +356,11 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		public void onJoinedRoom( final int statusCode , final Room room ){
-			trace("onJoinedRoom ::: "+statusCode+" - "+room);
-
 			if( statusCode != 0 )
 				return;
 
 			_currentRoom = room;
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
-				new Runnable( ) {
-					public void run() {
-						onEvent_wrapper( ROOM_JOINED , _serializeRoom(room) , statusCode);
-					}
-				});
+			onEvent_wrapper( ROOM_JOINED , _serializeRoom(room) , statusCode);
 		}
 
 		/**
@@ -346,14 +370,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	voidf
 		*/
 		public void onLeftRoom( final int statusCode , final String roomId ){
-			trace("onLeftRoom ::: ");
 			_currentRoom = null;
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
-				new Runnable( ) {
-					public void run() {
-						onEvent_wrapper( ROOM_LEFT , roomId , statusCode);
-					}
-				});
+			onEvent_wrapper( ROOM_LEFT , roomId , statusCode);
 		}
 
 		/**
@@ -363,13 +381,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		public void onRoomConnected( final int statusCode , final Room room ){
-			trace("onRoomConnected ::: ");
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
-				new Runnable( ) {
-					public void run() {
-						onEvent_wrapper( ROOM_CONNECTED , _serializeRoom(room) , statusCode);
-					}
-				});
+			_currentRoom = room;
+			onEvent_wrapper( ROOM_CONNECTED , _serializeRoom(room) , statusCode);
 		}
 
 		/**
@@ -379,14 +392,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		public void onRoomCreated( final int statusCode , final Room room ){
-			trace("onRoomCreated ::: "+room);
 			_currentRoom = room;
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
-				new Runnable( ) {
-					public void run() {
-						onEvent_wrapper( ROOM_CREATED , room != null ? _serializeRoom(room) : "" , statusCode);
-					}
-				});
+			onEvent_wrapper( ROOM_CREATED , room != null ? _serializeRoom(room) : "" , statusCode);
 		}
 
 
@@ -562,19 +569,24 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	// -------o protected
 
 		static private void onEvent_wrapper( final String jsEvName , final String javaArg , final int status ) {
-
+			trace("onEvent_wrapper ::: "+jsEvName+" - "+javaArg+" - "+status);
 			if( _mSurface == null )
 				_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
 
 			_mSurface.queueEvent(new Runnable() {
 				@Override
 				public void run() {
-					onEvent( jsEvName, javaArg , status );
+					onEvent( jsEvName , javaArg , status );
 				}
 			});
+
 		}
 
 		static private void onDatas_wrapper( final String sDatas , final String sFrom ) {
+			trace("onDatas_wrapper ::: "+sDatas+" - "+sFrom );
+			/*
+			//_hxListener.call2( "onDatas" , sDatas , sFrom );
+			//onDatas( sDatas, sFrom );
 
 			if( _mSurface == null )
 				_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
@@ -585,6 +597,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 					onDatas( sDatas, sFrom );
 				}
 			});
+			*/
 		}
 
 		/**
@@ -616,10 +629,10 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static private void _runIntent( final Intent i , final int id ){
-			PlayServices.getInstance( ).frag.getActivity( ).runOnUiThread(
+			GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
-						PlayServices.getInstance( ).frag.startActivityForResult( i , id );
+						PlayServicesFrag.getInstance( ).startActivityForResult( i , id );
 					}
 				});
 		}
