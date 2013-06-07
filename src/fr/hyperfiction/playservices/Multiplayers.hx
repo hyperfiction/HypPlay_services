@@ -122,6 +122,19 @@ class Multiplayers{
 		}
 
 		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function disconnect( ) : Void {
+
+		}
+
+		/**
 		* Accept an invitation by it's ID
 		*
 		* @public

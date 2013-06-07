@@ -135,6 +135,16 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
+		static public void disconnect( ){
+			getGamesClient( ).disconnect( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public void stopListen_for_invitations( ){
 			trace("stopListen_for_invitations");
 			getGamesClient( ).unregisterInvitationListener( );
