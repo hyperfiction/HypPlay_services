@@ -162,6 +162,16 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
+		static public void leaveRoom( ){
+			getGamesClient().leaveRoom( Multiplayers.getInstance( ) , _currentRoom.getRoomId( ) );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public void openInvitations_inbox( ){
 			trace("openInvitations_inbox");
 			_runIntent( getGamesClient( ).getInvitationInboxIntent( ) , ID_INVITATIONS_INBOX );

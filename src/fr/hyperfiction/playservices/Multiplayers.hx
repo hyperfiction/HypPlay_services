@@ -109,6 +109,19 @@ class Multiplayers{
 		}
 
 		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function leaveRoom( ) : Void {
+
+		}
+
+		/**
 		* Accept an invitation by it's ID
 		*
 		* @public
