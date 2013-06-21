@@ -42,8 +42,6 @@ public class PlayServices implements GameHelper.GameHelperListener{
 	final public static int ID_SETTINGS	= 5007;
 	final public static int ID_ERROR_POPUP	= 6000;
 
-	public static HaxeObject haxeCallback;
-
 	private static GLSurfaceView _mSurface;
 	private boolean _bInit = false;
 
@@ -86,9 +84,8 @@ public class PlayServices implements GameHelper.GameHelperListener{
 		* @public
 		* @return	void
 		*/
-		static public void initialize( HaxeObject cb ){
-			trace("initialize ::: "+cb);
-			haxeCallback = cb;
+		static public void initialize( ){
+			trace("initialize ::: ");
 			getInstance( )._init( );
 			onEvent( PlayServices.INIT , "" , 0 );
 		}
@@ -284,8 +281,6 @@ public class PlayServices implements GameHelper.GameHelperListener{
 		* @return	void
 		*/
 		static public void dispatchEvent( final String jsEvName , final String javaArg , final int statusCode  ) {
-			//PlayServices.haxeCallback.call3("onEvent",jsEvName,javaArg,0);
-			//onEvent( jsEvName, javaArg );
 
 			if( _mSurface == null )
 				_mSurface = (GLSurfaceView) GameActivity.getInstance().getCurrentFocus();
@@ -313,6 +308,7 @@ public class PlayServices implements GameHelper.GameHelperListener{
 
 			_bInit = true;
 
+			/*
 				GameActivity.getInstance( ).runOnUiThread(
 					new Runnable(){
 						@Override
@@ -328,7 +324,7 @@ public class PlayServices implements GameHelper.GameHelperListener{
 						}
 					}
 				);
-
+			*/
 			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
 
 		}

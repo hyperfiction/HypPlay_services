@@ -51,9 +51,10 @@ class PlayServices{
 
 			_setCallback( _onCallback );
 			Multiplayers.initialize( );
+
 			_listener = new HaxeObject( );
 			_listener.onEvent = _onEvent;
-			_initialize( _listener );
+			_initialize( );
 		}
 
 		/**
@@ -237,7 +238,7 @@ class PlayServices{
 		#if android
 		@JNI("fr.hyperfiction.playservices.PlayServices","initialize")
 		#end
-		static private function _initialize( cb : HaxeObject ) : Void{
+		static private function _initialize( ) : Void{
 
 		}
 

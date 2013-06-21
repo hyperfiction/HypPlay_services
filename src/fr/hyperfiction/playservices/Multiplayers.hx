@@ -4,6 +4,7 @@ import fr.hyperfiction.playservices.StatusCode;
 import nme.events.Event;
 import nme.events.EventDispatcher;
 import haxe.Json;
+import nme.Lib;
 
 /**
  * ...
@@ -12,7 +13,7 @@ import haxe.Json;
 @:build( ShortCuts.mirrors( ) )
 class Multiplayers{
 
-	static public var onEvent : EventDispatcher = new EventDispatcher( );
+	//static public var onEvent : EventDispatcher = new EventDispatcher( );
 
 	/*
 	static public var onDatas		: String->String->Void;
@@ -30,6 +31,7 @@ class Multiplayers{
 	private static inline var ON_INVITATION		: String = "HypPS_ON_INVITATION";
 	private static inline var ON_MESSAGE		: String = "HypPS_ON_MESSAGE";
 	private static inline var PEER_JOINED		: String = "HypPS_PEER_JOINED";
+	private static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
 	private static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
 	private static inline var ROOM_CREATED		: String = "HypPS_ROOM_CREATED";
 	private static inline var ROOM_JOINED		: String = "HypPS_ROOM_JOINED";
@@ -66,7 +68,7 @@ class Multiplayers{
 			_listener = new MultiplayersListener( );
 			_listener.onEvent = _onMultiplayers_event;
 			_listener.onDatas = _onMultiplayers_datas;
-			_initialize( _listener );
+
 		}
 
 		/**
@@ -118,6 +120,19 @@ class Multiplayers{
 		@JNI
 		#end
 		static public function leaveRoom( ) : Void {
+
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function disconnect( ) : Void {
 
 		}
 
@@ -231,19 +246,6 @@ class Multiplayers{
 
 	// -------o protected
 
-		/**
-		*
-		*
-		* @private
-		* @return	void
-		*/
-		#if android
-		@JNI("fr.hyperfiction.playservices.Multiplayers","initialize")
-		#end
-		static private function _initialize( cb : Dynamic ) : Void{
-
-		}
-
 		/*
 		*
 		*
@@ -297,6 +299,7 @@ class Multiplayers{
 					ev = new InvitationEvent( InvitationEvent.CANCEL , s , null );
 
 				case ON_INVITATION:
+					/*
 					try{
 						json = Json.parse( sArg );
 					}catch( e : nme.errors.Error ){
@@ -304,6 +307,7 @@ class Multiplayers{
 						trace( sArg );
 					}
 					ev = new InvitationEvent( InvitationEvent.RECEIVED , s , json );
+					*/
 
 				case ROOM_CREATED:
 					try{
@@ -319,7 +323,6 @@ class Multiplayers{
 				case ON_MESSAGE:
 					ev = new MultiplayersEvent( MultiplayersEvent.ON_MESSAGE , s , sArg );
 
-
 				case ROOM_CONNECTED:
 					ev = new RoomEvent( RoomEvent.CONNECTED , s );
 
@@ -329,6 +332,8 @@ class Multiplayers{
 				case PEER_JOINED:
 					ev = new MultiplayersEvent( RoomEvent.PEER_JOINED , s , sArg );
 
+				case PEER_LEFT:
+					ev = new MultiplayersEvent( RoomEvent.PEER_LEFT , s , sArg );
 
 				default:
 					trace("onEvent ::: "+sEvent+" - "+iCode);
@@ -339,9 +344,9 @@ class Multiplayers{
 
 			if( ev != null ){
 				trace("dispatch ::: "+ev);
-				trace( "hasListener ::: "+onEvent.hasEventListener( ev.type ));
-				trace( "onEvent ::: "+onEvent );
-				onEvent.dispatchEvent( ev );
+				trace( ev.type );
+				trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
+				Lib.current.stage.dispatchEvent( ev.clone( ) );
 			}
 		}
 
@@ -387,6 +392,15 @@ class MultiplayersEvent extends PSEvent{
 
 	// -------o public
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		override public function clone( ) : MultiplayersEvent {
+			return new MultiplayersEvent( type , status , sMessage );
+		}
 
 	// -------o protected
 
@@ -425,7 +439,15 @@ class InvitationEvent extends PSEvent{
 
 	// -------o public
 
-
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public override function clone() : InvitationEvent {
+			return new InvitationEvent( type , status , this.invit );
+		}
 
 	// -------o protected
 
@@ -448,6 +470,7 @@ class RoomEvent extends PSEvent{
 	public static inline var JOINED		: String = "HypPS_ROOM_JOINED";
 	public static inline var LEFT			: String = "HypPS_ROOM_LEFT";
 	public static inline var PEER_JOINED	: String = "HypPS_PEER_JOINED";
+	public static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
 
 	// -------o constructor
 
@@ -464,7 +487,17 @@ class RoomEvent extends PSEvent{
 
 	// -------o public
 
-
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		public override function clone() : RoomEvent {
+			var 	ev = new RoomEvent( type , status );
+				ev.roomDesc = roomDesc;
+			return ev;
+		}
 
 	// -------o protected
 

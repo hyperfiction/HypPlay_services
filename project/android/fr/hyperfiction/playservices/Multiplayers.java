@@ -21,7 +21,6 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.gson.Gson;
 
 import fr.hyperfiction.playservices.PlayHelper;
-import fr.hyperfiction.playservices.PlayServicesFrag;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	final public static String INVITE_SENT		= "HypPS_INVITE_SENT";
 	final public static String INVITE_USERS		= "HypPS_INVITE_USERS";
 	final public static String ON_INVITATION	= "HypPS_ON_INVITATION";
-	final public static String ON_MESSAGE		= "HypPS_ON_INVITATION";
+	final public static String ON_MESSAGE		= "HypPS_ON_MESSAGE";
 	final public static String PEER_CONNECTED	= "HypPS_PEER_CONNECTED";
 	final public static String PEER_DECLINED	= "HypPS_PEER_DECLINED";
 	final public static String PEER_DISCONNECTED	= "HypPS_PEER_DISCONNECTED";
@@ -74,7 +73,6 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 	private static Room _currentRoom;
 	private static int _iMinOpp;
 	private static int _iMaxOpp;
-	private static HaxeObject _hxListener;
 
 	// -------o constructor
 
@@ -96,8 +94,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
-		static public void initialize( HaxeObject hxListener ){
-			_hxListener = hxListener;
+		static public void initialize(){
+			trace("initialize");
 		}
 
 		/**
@@ -127,6 +125,16 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 					}
 				}
 			);
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public void disconnect( ){
+			getGamesClient( ).disconnect( );
 		}
 
 		/**
@@ -332,14 +340,18 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static public void sendString( String sMessage ){
-			trace("sendString :: "+sMessage+" - "+_currentRoom.getRoomId( ));
+			trace("sendString :: "+sMessage+" ::::::  "+_currentRoom.getRoomId( ));
 			trace( "room ::: "+_currentRoom.getRoomId( ) );
-			byte[] ba = sMessage.getBytes();
-			getGamesClient( ).sendUnreliableRealTimeMessageToAll(
-															ba,
-															_currentRoom.getRoomId( )
-														);
-			ba = null;
+			final byte[] ba = sMessage.getBytes();
+
+			GameActivity.getInstance( ).runOnUiThread(
+				new Runnable( ) {
+					public void run() {
+						getGamesClient( ).sendUnreliableRealTimeMessageToAll( ba, _currentRoom.getRoomId( ) );
+					}
+				});
+
+
 		}
 
 		/**
@@ -563,10 +575,10 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			String msg = null;
 			try{
 				msg = new String( rtm.getMessageData( ) , "UTF-8");
+				onEvent_wrapper( ON_MESSAGE , msg , 0 );
 			}catch( java.io.UnsupportedEncodingException e ){
 
 			}
-			onDatas_wrapper( msg , rtm.getSenderParticipantId() );
 		}
 
 		/**
@@ -652,7 +664,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
-						PlayServicesFrag.getInstance( ).startActivityForResult( i , id );
+						GameActivity.getInstance( ).startActivityForResult( i , id );
 					}
 				});
 		}
