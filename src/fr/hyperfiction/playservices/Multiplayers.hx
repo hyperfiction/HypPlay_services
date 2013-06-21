@@ -1,10 +1,16 @@
 package fr.hyperfiction.playservices;
 
 import fr.hyperfiction.playservices.StatusCode;
+import fr.hyperfiction.playservices.events.InvitationEvent;
+import fr.hyperfiction.playservices.events.MultiplayersEvent;
+import fr.hyperfiction.playservices.events.PSEvent;
+import fr.hyperfiction.playservices.events.RoomEvent;
+
+import nme.Lib;
 import nme.events.Event;
 import nme.events.EventDispatcher;
+
 import haxe.Json;
-import nme.Lib;
 
 /**
  * ...
@@ -81,7 +87,7 @@ class Multiplayers{
 		@JNI
 		#end
 		static public function listenFor_invitations( ) : Void {
-			trace("listenFor_invitations");
+
 		}
 
 		/**
@@ -136,18 +142,6 @@ class Multiplayers{
 
 		}
 
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		#if android
-		@JNI
-		#end
-		static public function disconnect( ) : Void {
-
-		}
 
 		/**
 		* Accept an invitation by it's ID
@@ -299,7 +293,6 @@ class Multiplayers{
 					ev = new InvitationEvent( InvitationEvent.CANCEL , s , null );
 
 				case ON_INVITATION:
-					/*
 					try{
 						json = Json.parse( sArg );
 					}catch( e : nme.errors.Error ){
@@ -307,7 +300,6 @@ class Multiplayers{
 						trace( sArg );
 					}
 					ev = new InvitationEvent( InvitationEvent.RECEIVED , s , json );
-					*/
 
 				case ROOM_CREATED:
 					try{
@@ -365,181 +357,6 @@ class Multiplayers{
 }
 
 
-/**
- * ...
- * @author shoe[box]
- */
-
-class MultiplayersEvent extends PSEvent{
-
-	public var sMessage : String;
-
-	public static inline var GAME_START	: String = "HypPS_GAME_START";
-	public static inline var ON_MESSAGE	: String = "HypPS_ON_MESSAGE";
-
-	// -------o constructor
-
-		/**
-		* constructor
-		*
-		* @param
-		* @return	void
-		*/
-		public function new( t : String , statusCode : Status , ?sMessage : String ) {
-			super( t , statusCode );
-			this.sMessage = sMessage;
-		}
-
-	// -------o public
-
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		override public function clone( ) : MultiplayersEvent {
-			return new MultiplayersEvent( type , status , sMessage );
-		}
-
-	// -------o protected
-
-
-
-	// -------o misc
-
-}
-
-/**
- * ...
- * @author shoe[box]
- */
-
-class InvitationEvent extends PSEvent{
-
-	public var invit : InvitationDesc;
-
-	public static inline var ACCEPTED	: String = "HypPS_INVITE_ACCEPTED";
-	public static inline var CANCEL	: String = "HypPS_INVITE_CANCEL";
-	public static inline var RECEIVED	: String = "HypPS_ON_INVITATION";
-	public static inline var SENT		: String = "HypPS_INVITE_SENT";
-
-	// -------o constructor
-
-		/**
-		* constructor
-		*
-		* @param
-		* @return	void
-		*/
-		public function new( t : String , statusCode : Status , ?invit : InvitationDesc ) {
-			super( t , statusCode );
-			this.invit = invit;
-		}
-
-	// -------o public
-
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		public override function clone() : InvitationEvent {
-			return new InvitationEvent( type , status , this.invit );
-		}
-
-	// -------o protected
-
-
-
-	// -------o misc
-
-}
-
-/**
- * ...
- * @author shoe[box]
- */
-class RoomEvent extends PSEvent{
-
-	public var roomDesc : RoomDesc;
-
-	public static inline var CONNECTED		: String = "HypPS_ROOM_CONNECTED";
-	public static inline var CREATED		: String = "HypPS_ROOM_CREATED";
-	public static inline var JOINED		: String = "HypPS_ROOM_JOINED";
-	public static inline var LEFT			: String = "HypPS_ROOM_LEFT";
-	public static inline var PEER_JOINED	: String = "HypPS_PEER_JOINED";
-	public static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
-
-	// -------o constructor
-
-		/**
-		* constructor
-		*
-		* @param
-		* @return	void
-		*/
-		public function new( t : String , statusCode : Status , ?roomDesc : RoomDesc ) {
-			super( t , statusCode );
-			this.roomDesc = roomDesc;
-		}
-
-	// -------o public
-
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		public override function clone() : RoomEvent {
-			var 	ev = new RoomEvent( type , status );
-				ev.roomDesc = roomDesc;
-			return ev;
-		}
-
-	// -------o protected
-
-
-
-	// -------o misc
-
-}
-
-/**
- * ...
- * @author shoe[box]
- */
-
-class PSEvent extends Event{
-
-	public var status : Status;
-
-	// -------o constructor
-
-		/**
-		* constructor
-		*
-		* @param
-		* @return	void
-		*/
-		public function new( t : String , status : Status ) {
-			super( t );
-			this.status = status;
-		}
-
-	// -------o public
-
-
-
-	// -------o protected
-
-
-
-	// -------o misc
-
-}
 
 class MultiplayersListener{
 

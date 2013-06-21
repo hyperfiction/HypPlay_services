@@ -120,21 +120,11 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			GameActivity.getInstance( ).runOnUiThread(
 				new Runnable( ) {
 					public void run() {
-						trace("run");
+						trace("listenFor_invitations::run");
 						getGamesClient( ).registerInvitationListener( Multiplayers.getInstance( ) );
 					}
 				}
 			);
-		}
-
-		/**
-		*
-		*
-		* @public
-		* @return	void
-		*/
-		static public void disconnect( ){
-			getGamesClient( ).disconnect( );
 		}
 
 		/**
