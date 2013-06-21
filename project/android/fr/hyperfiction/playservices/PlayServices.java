@@ -325,7 +325,7 @@ public class PlayServices implements GameHelper.GameHelperListener{
 					}
 				);
 			*/
-			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES );
+			PlayHelper.getInstance( ).setup( this , GameHelper.CLIENT_GAMES | GameHelper.CLIENT_PLUS );
 
 		}
 

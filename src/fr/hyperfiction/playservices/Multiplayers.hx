@@ -19,15 +19,6 @@ import haxe.Json;
 @:build( ShortCuts.mirrors( ) )
 class Multiplayers{
 
-	//static public var onEvent : EventDispatcher = new EventDispatcher( );
-
-	/*
-	static public var onDatas		: String->String->Void;
-	static public var onEvent		: String->RoomDesc->Status->Void;
-	static public var onInvitation	: String->InvitationDesc->Status->Void;
-	static public var onStatus		: String->String->Status->Void;
-	*/
-
 	private static var _listener : MultiplayersListener;
 
 	private static inline var GAME_START		: String = "HypPS_GAME_START";

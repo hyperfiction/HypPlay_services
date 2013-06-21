@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.google.android.gms.plus.PlusShare;
 import com.google.android.gms.plus.PlusShare.Builder;
+import com.google.android.gms.plus.PlusClient;
 
 import fr.hyperfiction.playservices.PlayHelper;
 
@@ -47,9 +48,67 @@ public class Plus{
 		     GameActivity.getInstance( ).startActivityForResult( i , 0 );
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getFamily_name( ){
+			return getPlusClient( ).getCurrentPerson( ).getName( ).getFamilyName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getFirst_name( ){
+			return getPlusClient( ).getCurrentPerson( ).getName( ).getGivenName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getAccount_name( ){
+			return getPlusClient( ).getAccountName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getDisplay_name( ){
+			return getPlusClient( ).getCurrentPerson( ).getDisplayName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getNick_name( ){
+			return getPlusClient( ).getCurrentPerson( ).getNickname( );
+		}
+
 	// -------o protected
 
-
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		static private PlusClient getPlusClient( ){
+			return PlayHelper.getInstance( ).getPlusClient( );
+		}
 
 	// -------o misc
 
