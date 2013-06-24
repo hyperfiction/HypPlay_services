@@ -33,6 +33,7 @@ class Multiplayers{
 	private static inline var ROOM_CREATED		: String = "HypPS_ROOM_CREATED";
 	private static inline var ROOM_JOINED		: String = "HypPS_ROOM_JOINED";
 	private static inline var ROOM_LEFT		: String = "HypPS_ROOM_LEFT";
+	private static inline var RTM_SEND			: String = "HypPS_RTM_SEND";
 
 	// -------o constructor
 
@@ -317,6 +318,9 @@ class Multiplayers{
 
 				case PEER_LEFT:
 					ev = new MultiplayersEvent( RoomEvent.PEER_LEFT , s , sArg );
+
+				case RTM_SEND:
+					ev = new MultiplayersEvent( MultiplayersEvent.MESSAGE_SENT , s , sArg );
 
 				default:
 					trace("onEvent ::: "+sEvent+" - "+iCode);

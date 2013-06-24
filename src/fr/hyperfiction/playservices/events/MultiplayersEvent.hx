@@ -15,6 +15,7 @@ class MultiplayersEvent extends PSEvent{
 
 	public static inline var GAME_START	: String = "HypPS_GAME_START";
 	public static inline var ON_MESSAGE	: String = "HypPS_ON_MESSAGE";
+	public static inline var MESSAGE_SENT	: String = "HypPS_MESSAGE_SENT";
 
 	// -------o constructor
 

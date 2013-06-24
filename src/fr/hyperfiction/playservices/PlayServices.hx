@@ -4,6 +4,7 @@ import fr.hyperfiction.playservices.events.SigninEvent;
 import fr.hyperfiction.playservices.Multiplayers;
 import haxe.Json;
 
+import nme.Lib;
 import nme.events.Event;
 import nme.events.EventDispatcher;
 
@@ -13,8 +14,6 @@ import nme.events.EventDispatcher;
  */
 @:build( ShortCuts.mirrors( ) )
 class PlayServices{
-
-	static public var onEvent : EventDispatcher = new EventDispatcher( );
 
 	static private inline var INIT				: String = "HypPS_INIT";
 	static private inline var ON_ACHIEVEMENT_UPDATED	: String = "HypPS_ON_ACHIEVEMENT_UPDATED";
@@ -267,13 +266,13 @@ class PlayServices{
 			switch( s ){
 
 				case INIT:
-					onEvent.dispatchEvent( new Event( Event.INIT ));
+					Lib.current.stage.dispatchEvent( new Event( Event.INIT ));
 
 				case SIGIN_SUCCESS:
-					onEvent.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
+					Lib.current.stage.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
 
 				case SIGIN_FAILED:
-					onEvent.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
+					Lib.current.stage.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
 
 				default:
 					//if( onStatus != null )
@@ -295,13 +294,13 @@ class PlayServices{
 			switch( sType ){
 
 				case INIT:
-					onEvent.dispatchEvent( new Event( Event.INIT ));
+					Lib.current.stage.dispatchEvent( new Event( Event.INIT ));
 
 				case SIGIN_SUCCESS:
-					onEvent.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
+					Lib.current.stage.dispatchEvent( new SigninEvent( SigninEvent.SUCCESS , OK ));
 
 				case SIGIN_FAILED:
-					onEvent.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
+					Lib.current.stage.dispatchEvent( new SigninEvent( SigninEvent.FAILED , OK ));
 
 
 			}
