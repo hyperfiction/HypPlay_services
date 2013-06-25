@@ -348,7 +348,7 @@ public class PlayServices implements GameHelper.GameHelperListener{
 		* @return	void
 		*/
 		public static void trace( String s ){
-			Log.w( TAG, s );
+			Log.w( TAG, "PlayServices ::: "+s );
 		}
-		private static String TAG = "trace";//HypFacebook";
+		private static String TAG = "HypPS";
 }

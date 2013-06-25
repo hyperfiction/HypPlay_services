@@ -156,8 +156,14 @@ public class PlayHelper extends GameHelper implements 	OnAchievementUpdatedListe
 		}
 		private static PlayHelper __instance;
 
+		/*
+		*
+		*
+		* @private
+		* @return	void
+		*/
 		public static void trace( String s ){
 			Log.w( TAG, "PlayHelper ::: "+s );
 		}
-		private static String TAG = "trace";//HypFacebook";
+		private static String TAG = "HypPS";
 }

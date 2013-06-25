@@ -130,7 +130,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
 
     // Print debug logs?
     boolean mDebugLog = true;
-    String mDebugTag = "trace";
+    String mDebugTag = "GameHelper";
 
     // Messages (can be set by the developer).
     String mSigningInMessage = "";
@@ -191,7 +191,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
         public static void trace( String s ){
             Log.w( TAG, s );
         }
-        private static String TAG = "trace";//HypFacebook";
+        private static String TAG = "GameHelper";//HypFacebook";
     /**
      * Performs setup on this GameHelper object. Call this from the onCreate()
      * method of your Activity. This will create the clients and do a few other

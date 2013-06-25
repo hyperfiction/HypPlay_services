@@ -265,10 +265,8 @@ class Multiplayers{
 		* @return	void
 		*/
 		static private function _onMultiplayers_event( sEvent : String , sArg : String , iCode : Int ) : Void{
-			trace("_onMultiplayer_event ::: "+sEvent+" - "+iCode);
 
 			var s : Status = StatusCode.translate( iCode );
-			trace("s ::: "+s);
 			var ev : PSEvent;
 
 			var json : Dynamic = null;
@@ -304,6 +302,9 @@ class Multiplayers{
 					trace( json );
 					ev = new RoomEvent( RoomEvent.CREATED , s , json );
 
+				case ROOM_LEFT:
+					ev = new RoomEvent( RoomEvent.LEFT , s , null );
+
 				case ON_MESSAGE:
 					ev = new MultiplayersEvent( MultiplayersEvent.ON_MESSAGE , s , sArg );
 
@@ -330,10 +331,10 @@ class Multiplayers{
 			}
 
 			if( ev != null ){
-				trace("dispatch ::: "+ev);
-				trace( ev.type );
-				trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
-				Lib.current.stage.dispatchEvent( ev.clone( ) );
+				trace("dispatch ::: "+ev+" || status ::: "+s);
+				//trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
+				if( Lib.current.stage.hasEventListener( ev.type ) )
+					Lib.current.stage.dispatchEvent( ev );
 			}
 		}
 

@@ -87,7 +87,7 @@ class Leaderboards{
 		* @return	void
 		*/
 		public static void trace( String s ){
-			Log.w( TAG, s );
+			Log.w( TAG, "Leaderboards ::: "+s );
 		}
-		private static String TAG = "trace";//HypFacebook";
+		private static String TAG = "HypPS";
 }
