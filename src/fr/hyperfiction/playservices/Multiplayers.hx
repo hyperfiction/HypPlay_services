@@ -27,6 +27,7 @@ class Multiplayers{
 	private static inline var INVITE_SENT		: String = "HypPS_INVITE_SENT";
 	private static inline var ON_INVITATION		: String = "HypPS_ON_INVITATION";
 	private static inline var ON_MESSAGE		: String = "HypPS_ON_MESSAGE";
+	private static inline var PEER_CONNECTED	: String = "HypPS_PEER_CONNECTED";
 	private static inline var PEER_JOINED		: String = "HypPS_PEER_JOINED";
 	private static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
 	private static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
@@ -210,11 +211,13 @@ class Multiplayers{
 		* @public
 		* @return	void
 		*/
-		#if android
-		@JNI
-		#end
-		static public function sendString( sMessage : String ) : Void {
 
+		static public function sendString( sMessage : String ) : Status {
+			#if android
+			var res : Int = _sendString( sMessage );
+			trace("res ::: "+res);
+			return StatusCode.translate( res ) ;
+			#end
 		}
 
 		/**
@@ -231,6 +234,19 @@ class Multiplayers{
 		}
 
 	// -------o protected
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		#if android
+		@JNI("fr.hyperfiction.playservices.Multiplayers","sendString")
+		#end
+		static private function _sendString( s : String ) : Int{
+			return -1;
+		}
 
 		/*
 		*
@@ -311,14 +327,17 @@ class Multiplayers{
 				case ROOM_CONNECTED:
 					ev = new RoomEvent( RoomEvent.CONNECTED , s );
 
-				case GAME_START:
-					ev = new MultiplayersEvent( MultiplayersEvent.GAME_START , s , sArg );
-
 				case PEER_JOINED:
-					ev = new MultiplayersEvent( RoomEvent.PEER_JOINED , s , sArg );
+					ev = new RoomEvent( RoomEvent.PEER_JOINED , s , null );
+
+				case PEER_CONNECTED:
+					ev = new RoomEvent( RoomEvent.PEER_CONNECTED , s , null );
 
 				case PEER_LEFT:
-					ev = new MultiplayersEvent( RoomEvent.PEER_LEFT , s , sArg );
+					ev = new RoomEvent( RoomEvent.PEER_LEFT , s , null );
+
+				case GAME_START:
+					ev = new MultiplayersEvent( MultiplayersEvent.GAME_START , s , sArg );
 
 				case RTM_SEND:
 					ev = new MultiplayersEvent( MultiplayersEvent.MESSAGE_SENT , s , sArg );
@@ -331,7 +350,7 @@ class Multiplayers{
 			}
 
 			if( ev != null ){
-				trace("dispatch ::: "+ev+" || status ::: "+s);
+				//trace("dispatch ::: "+ev+" || status ::: "+s);
 				//trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
 				if( Lib.current.stage.hasEventListener( ev.type ) )
 					Lib.current.stage.dispatchEvent( ev );

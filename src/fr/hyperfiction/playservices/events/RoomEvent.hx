@@ -18,6 +18,7 @@ class RoomEvent extends PSEvent{
 	public static inline var CREATED		: String = "HypPS_ROOM_CREATED";
 	public static inline var JOINED		: String = "HypPS_ROOM_JOINED";
 	public static inline var LEFT			: String = "HypPS_ROOM_LEFT";
+	public static inline var PEER_CONNECTED	: String = "HypPS_PEER_CONNECTED";
 	public static inline var PEER_JOINED	: String = "HypPS_PEER_JOINED";
 	public static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
 

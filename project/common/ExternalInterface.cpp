@@ -58,7 +58,7 @@ extern "C"{
 
 	void HypPlayServices_onEvent( const char *sType , const char *sArg , int statusCode ){
 		#ifdef ANDROID
-		ALOG("hypps_onEvent" );
+		//ALOG("hypps_onEvent" );
 		#endif
 		val_call3(
 					eval_onEvent->get( ) ,
@@ -70,7 +70,7 @@ extern "C"{
 
 	void Multiplayers_onEvent( const char *sType , const char *sArg , int statusCode ){
 		#ifdef ANDROID
-		ALOG("Multiplayers_onEvent" );
+		//ALOG("Multiplayers_onEvent" );
 		#endif
 		val_call3(
 					eval_onEvent_multi->get( ) ,
@@ -82,7 +82,7 @@ extern "C"{
 
 	void Multiplayers_onDatas( const char *sDatas , const char *sFrom ){
 		#ifdef ANDROID
-		ALOG("Multiplayers_onDatas" );
+		//ALOG("Multiplayers_onDatas" );
 		#endif
 		val_call2(
 					eval_onDatas_multi->get( ) ,

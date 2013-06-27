@@ -329,18 +329,12 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
-		static public void sendString( String sMessage ){
+		static public int sendString( String sMessage ){
 			trace("sendString :: "+sMessage+" ::::::  "+_currentRoom.getRoomId( ));
 			trace( "room ::: "+_currentRoom.getRoomId( ) );
 			final byte[] ba = sMessage.getBytes();
 
-			GameActivity.getInstance( ).runOnUiThread(
-				new Runnable( ) {
-					public void run() {
-						getGamesClient( ).sendUnreliableRealTimeMessageToAll( ba, _currentRoom.getRoomId( ) );
-					}
-				});
-
+			return getGamesClient( ).sendUnreliableRealTimeMessageToAll( ba, _currentRoom.getRoomId( ) );
 
 		}
 
@@ -351,20 +345,26 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static public void sendString_reliable( String sMessage ){
+			byte[] ba = sMessage.getBytes();
 			trace("sendString_reliable :: "+sMessage);
+			trace("max length ::: "+ba.length+" / "+GamesClient.MAX_RELIABLE_MESSAGE_LEN );
 			trace( "room ::: "+_currentRoom.getRoomId( ) );
 			trace( "participants ::: "+_currentRoom.getParticipantIds( ) );
-			byte[] ba = sMessage.getBytes();
 			trace(" p ::: "+_currentRoom.getParticipants( ) );
 			String me =  _currentRoom.getParticipantId( getGamesClient( ).getCurrentPlayerId( ) );
-			for( Participant p : _currentRoom.getParticipants() )
-				if( p.getParticipantId( ) != me )
-				getGamesClient( ).sendReliableRealTimeMessage(
-														getInstance( ),
-														ba,
-														_currentRoom.getRoomId( ),
-														p.getParticipantId( )
-													);
+			for( Participant p : _currentRoom.getParticipants() ){
+				if( p.getParticipantId( ) != me ){
+					trace( "to ::: " + p.getParticipantId( ) );
+
+					trace("res ::: "+getGamesClient( ).sendReliableRealTimeMessage(
+															getInstance( ),
+															ba,
+															_currentRoom.getRoomId( ),
+															p.getParticipantId( )
+														));
+
+				}
+			}
 			ba = null;
 		}
 
