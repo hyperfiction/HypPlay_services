@@ -28,11 +28,11 @@ For recompiling the native extensions just use the sh files contained in the pro
 
 Usage
 -----
-TBD
+Take a look at the [wiki](https://github.com/hyperfiction/HypPlay_services/wiki) ( WIP )
 
 Quick reference
 ---------------
-TBD
+TDB
 
 Made at [Hyperfiction](http://hyperfiction.fr)
 --------------------
