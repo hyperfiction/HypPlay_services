@@ -18,7 +18,6 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig.Builder;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
-import com.google.gson.Gson;
 
 import fr.hyperfiction.playservices.PlayHelper;
 
@@ -194,6 +193,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		static public void handleInvitation_select( int resultCode , Intent datas ){
 			trace("handleInvitation_select");
 
+			trace( "datas ::: "+datas );
+
 			//If the invitation popup have been canceled
 				if( resultCode != Activity.RESULT_OK ){
 					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
@@ -273,7 +274,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			trace("resultCode ::: "+resultCode+" - "+datas);
 			if (resultCode == Activity.RESULT_OK) {
 				trace("handleWaitingroom_results:::RESULT_OK");
-				onEvent_wrapper( GAME_START , "" , resultCode );
+				onEvent_wrapper( GAME_START , "" , 0 );
 			}else if (resultCode == Activity.RESULT_CANCELED) {
 				trace("handleWaitingroom_results::::RESULT_CANCELED");
 				onEvent_wrapper( INVITE_CANCEL , "" , resultCode );
@@ -368,6 +369,70 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 			ba = null;
 		}
 
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String[] getParticipants_ids( ){
+			ArrayList<String> al = _currentRoom. getParticipantIds( );
+			String[] res = new String[al.size()];
+
+			al.toArray( res );
+			return res;
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getCurrent_player_participant_id( ){
+			return _currentRoom.getParticipantId( getGamesClient( ).getCurrentPlayerId( ) );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getParticipant_display_name( String s ){
+			trace("getParticipant_display_name ::: "+s);
+			Participant p = _getParticipant_by_id( s );
+			return p.getDisplayName( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getParticipant_id( String s ){
+			Participant p = _getParticipant_by_id( s );
+			return p.getPlayer( ).getPlayerId( );
+		}
+
+		/**
+		*
+		*
+		* @private
+		* @return	void
+		*/
+		static private Participant _getParticipant_by_id( String s ){
+			String vs = null;
+			for( Participant p : _currentRoom.getParticipants() ){
+				vs = p.getParticipantId( );
+				trace( vs+" vs "+s+" === "+( vs == s));
+				if( vs.equals( s ) ){
+					return p;
+				}
+			}
+			return null;
+		}
 
 	// -------o callbacks
 
@@ -378,9 +443,6 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		public void onJoinedRoom( final int statusCode , final Room room ){
-			if( statusCode != 0 )
-				return;
-
 			_currentRoom = room;
 			onEvent_wrapper( ROOM_JOINED , _serializeRoom(room) , statusCode);
 		}

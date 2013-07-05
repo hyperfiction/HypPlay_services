@@ -71,6 +71,58 @@ class Multiplayers{
 		}
 
 		/**
+		* Return the list of the current game participants
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getParticipants_ids( ) : Array<String> {
+			return [ ];
+		}
+
+		/**
+		* Get the id of the current player
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getCurrent_player_participant_id( ) : String {
+			return "";
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getParticipant_id( s : String ) : String {
+			return "";
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getParticipant_display_name( s : String ) : String {
+			return null;
+		}
+
+		/**
 		* Listen for ingame notifications
 		*
 		* @public
@@ -110,7 +162,7 @@ class Multiplayers{
 		}
 
 		/**
-		*
+		* Leave the current room dispatch an event when complete
 		*
 		* @public
 		* @return	void
@@ -123,7 +175,7 @@ class Multiplayers{
 		}
 
 		/**
-		*
+		* Disconnect from the Google Play Serviers
 		*
 		* @public
 		* @return	void
@@ -206,7 +258,7 @@ class Multiplayers{
 		}
 
 		/**
-		*
+		* Send a string by using the unreliable method
 		*
 		* @public
 		* @return	void
@@ -218,10 +270,13 @@ class Multiplayers{
 			trace("res ::: "+res);
 			return StatusCode.translate( res ) ;
 			#end
+
+			return null;
 		}
 
 		/**
-		*
+		* Send a string by using the reliable method
+		* An event is dispatched when the message is sent
 		*
 		* @public
 		* @return	void
@@ -325,7 +380,22 @@ class Multiplayers{
 					ev = new MultiplayersEvent( MultiplayersEvent.ON_MESSAGE , s , sArg );
 
 				case ROOM_CONNECTED:
-					ev = new RoomEvent( RoomEvent.CONNECTED , s );
+					try{
+						json = Json.parse( sArg );
+					}catch( e : nme.errors.Error ){
+						trace( e );
+						trace( sArg );
+					}
+					ev = new RoomEvent( RoomEvent.CONNECTED , s , json );
+
+				case ROOM_JOINED:
+					try{
+						json = Json.parse( sArg );
+					}catch( e : nme.errors.Error ){
+						trace( e );
+						trace( sArg );
+					}
+					ev = new RoomEvent( RoomEvent.JOINED , s , json );
 
 				case PEER_JOINED:
 					ev = new RoomEvent( RoomEvent.PEER_JOINED , s , null );
@@ -350,8 +420,8 @@ class Multiplayers{
 			}
 
 			if( ev != null ){
-				//trace("dispatch ::: "+ev+" || status ::: "+s);
-				//trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
+				trace("dispatch ::: "+ev+" || status ::: "+s);
+				trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
 				if( Lib.current.stage.hasEventListener( ev.type ) )
 					Lib.current.stage.dispatchEvent( ev );
 			}
