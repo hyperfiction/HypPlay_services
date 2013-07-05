@@ -13,7 +13,7 @@ import com.google.example.games.basegameutils.GameHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import fr.hyperfiction.playservices.PlayServicesFrag;
+//import fr.hyperfiction.playservices.PlayServicesFrag;
 import fr.hyperfiction.playservices.PlayHelper;
 
 import org.haxe.nme.GameActivity;
