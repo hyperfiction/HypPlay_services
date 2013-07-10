@@ -1,7 +1,7 @@
 package fr.hyperfiction.playservices.events;
 
 import fr.hyperfiction.playservices.StatusCode;
-import nme.events.Event;
+import flash.events.Event;
 
 /**
  * ...

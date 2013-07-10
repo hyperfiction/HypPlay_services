@@ -4,7 +4,7 @@ import fr.hyperfiction.playservices.Multiplayers;
 import fr.hyperfiction.playservices.StatusCode;
 import fr.hyperfiction.playservices.events.PSEvent;
 
-import nme.events.Event;
+import flash.events.Event;
 
 /**
  * ...

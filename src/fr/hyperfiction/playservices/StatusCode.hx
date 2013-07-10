@@ -64,6 +64,7 @@ class StatusCode{
 				case STATUS_NETWORK_ERROR_OPERATION_FAILED:
 					NETWORK_ERROR_OPERATION_FAILED;
 
+				case _:
 
 
 			};

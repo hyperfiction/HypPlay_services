@@ -6,9 +6,9 @@ import fr.hyperfiction.playservices.events.MultiplayersEvent;
 import fr.hyperfiction.playservices.events.PSEvent;
 import fr.hyperfiction.playservices.events.RoomEvent;
 
-import nme.Lib;
-import nme.events.Event;
-import nme.events.EventDispatcher;
+import flash.Lib;
+import flash.events.Event;
+import flash.events.EventDispatcher;
 
 import haxe.Json;
 
@@ -356,7 +356,7 @@ class Multiplayers{
 				case ON_INVITATION:
 					try{
 						json = Json.parse( sArg );
-					}catch( e : nme.errors.Error ){
+					}catch( e : flash.errors.Error ){
 						trace( e );
 						trace( sArg );
 					}
@@ -365,7 +365,7 @@ class Multiplayers{
 				case ROOM_CREATED:
 					try{
 						json = Json.parse( sArg );
-					}catch( e : nme.errors.Error ){
+					}catch( e : flash.errors.Error ){
 						trace( e );
 						trace( sArg );
 					}
@@ -382,7 +382,7 @@ class Multiplayers{
 				case ROOM_CONNECTED:
 					try{
 						json = Json.parse( sArg );
-					}catch( e : nme.errors.Error ){
+					}catch( e : flash.errors.Error ){
 						trace( e );
 						trace( sArg );
 					}
@@ -391,7 +391,7 @@ class Multiplayers{
 				case ROOM_JOINED:
 					try{
 						json = Json.parse( sArg );
-					}catch( e : nme.errors.Error ){
+					}catch( e : flash.errors.Error ){
 						trace( e );
 						trace( sArg );
 					}

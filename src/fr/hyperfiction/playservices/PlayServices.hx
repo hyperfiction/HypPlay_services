@@ -4,9 +4,9 @@ import fr.hyperfiction.playservices.events.SigninEvent;
 import fr.hyperfiction.playservices.Multiplayers;
 import haxe.Json;
 
-import nme.Lib;
-import nme.events.Event;
-import nme.events.EventDispatcher;
+import flash.Lib;
+import flash.events.Event;
+import flash.events.EventDispatcher;
 
 /**
  * ...

@@ -1,8 +1,8 @@
 package ;
 
-import nme.display.Sprite;
-import nme.events.Event;
-import nme.Lib;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.Lib;
 
 /**
  * ...
@@ -32,7 +32,7 @@ class Main extends Sprite
 		// stage.stageWidth x stage.stageHeight @ stage.dpiScale
 		
 		// Assets:
-		// nme.Assets.getBitmapData("img/assetname.jpg");
+		// flash.Assets.getBitmapData("img/assetname.jpg");
 	}
 
 	/* SETUP */
@@ -57,8 +57,8 @@ class Main extends Sprite
 	public static function main() 
 	{
 		// static entry point
-		Lib.current.stage.align = nme.display.StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = nme.display.StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
+		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
 		Lib.current.addChild(new Main());
 	}
 }
