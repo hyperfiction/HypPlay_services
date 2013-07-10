@@ -10,11 +10,15 @@
 
 	<!-- android -->
 		<java path="/project/android" if="android"/>
+		<!--
 		<template path="/templates/android/res" rename="res" if="android"/>
 		<template path="/templates/android/libs" rename="libs" if="android"/>
 		<template path="/templates/android/libs" rename="libs" if="android"/>
 		<template path="/templates/android/src" rename="src" if="android"/>
 		<template path="/templates/android/R.java" rename="gen/com/google/android/gms/R.java" if="android"/>
+		-->
+
+		<templatePath name="templates" />
 
 	<!-- flash -->
 
