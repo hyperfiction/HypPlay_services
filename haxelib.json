@@ -1,14 +1,12 @@
 {
-  "name":"HypPlayServices",
+  "name":"hyp-playservices",
   "url" :"https://github.com/hyperfiction/HypPlay_services",
   "license":"BSD",
   "tags": ["hyperfiction", "google","play services","google play","google+","android"],
-  "description": "Hyperfiction Google Play Services native extension for OpenFL. Allow use of achievements, leaderboards, multiplayers... inside your OpenFL app. Android only for now, soon on iOS",
+  "description": "Hyperfiction Google Play Services native extension for OpenFL. Allow usage of achievements, leaderboards, multiplayers... inside your OpenFL app. Android only for now, soon on iOS",
   "version": "1.0.0",
   "releasenote": "Initial release",
-  "contributors": ["shoe[box]"],
+  "contributors": ["shoebox"],
   "dependencies": {
-   "openfl": "1.0.4",
-   "inthebox-macros":"0.0.1"
   }
 }

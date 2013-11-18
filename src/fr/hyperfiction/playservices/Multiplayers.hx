@@ -23,17 +23,18 @@ class Multiplayers{
 
 	private static inline var GAME_START		: String = "HypPS_GAME_START";
 	private static inline var INVITE_ACCEPTED	: String = "HypPS_INVITE_ACCEPTED";
+	private static inline var INVITE_AUTOPICK	: String = "HypPS_INVITE_AUTOPICK";
 	private static inline var INVITE_CANCEL		: String = "HypPS_INVITE_CANCEL";
 	private static inline var INVITE_SENT		: String = "HypPS_INVITE_SENT";
 	private static inline var ON_INVITATION		: String = "HypPS_ON_INVITATION";
 	private static inline var ON_MESSAGE		: String = "HypPS_ON_MESSAGE";
 	private static inline var PEER_CONNECTED	: String = "HypPS_PEER_CONNECTED";
 	private static inline var PEER_JOINED		: String = "HypPS_PEER_JOINED";
-	private static inline var PEER_LEFT		: String = "HypPS_PEER_LEFT";
+	private static inline var PEER_LEFT			: String = "HypPS_PEER_LEFT";
 	private static inline var ROOM_CONNECTED	: String = "HypPS_ROOM_CONNECTED";
 	private static inline var ROOM_CREATED		: String = "HypPS_ROOM_CREATED";
 	private static inline var ROOM_JOINED		: String = "HypPS_ROOM_JOINED";
-	private static inline var ROOM_LEFT		: String = "HypPS_ROOM_LEFT";
+	private static inline var ROOM_LEFT			: String = "HypPS_ROOM_LEFT";
 	private static inline var RTM_SEND			: String = "HypPS_RTM_SEND";
 
 	// -------o constructor
@@ -68,6 +69,32 @@ class Multiplayers{
 			_listener.onEvent = _onMultiplayers_event;
 			_listener.onDatas = _onMultiplayers_datas;
 
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getRoom_creatorId( ) : String {
+			return null;
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		#if android
+		@JNI
+		#end
+		static public function getRoom_creationTimestamp( ) : String {
+			return null;
 		}
 
 		/**
@@ -347,6 +374,9 @@ class Multiplayers{
 				case INVITE_ACCEPTED:
 					ev = new InvitationEvent( InvitationEvent.ACCEPTED , s , json );
 
+				case INVITE_AUTOPICK:
+					ev = new InvitationEvent( InvitationEvent.AUTOPICK , s , json );
+
 				case INVITE_SENT:
 					ev = new InvitationEvent( InvitationEvent.SENT , s , null );
 
@@ -420,8 +450,8 @@ class Multiplayers{
 			}
 
 			if( ev != null ){
-				trace("dispatch ::: "+ev+" || status ::: "+s);
-				trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
+				//trace("dispatch ::: "+ev+" || status ::: "+s);
+				//trace( "hasListener ::: "+Lib.current.stage.hasEventListener( ev.type ));
 				if( Lib.current.stage.hasEventListener( ev.type ) )
 					Lib.current.stage.dispatchEvent( ev );
 			}

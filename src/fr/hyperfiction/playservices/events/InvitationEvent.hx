@@ -16,7 +16,8 @@ class InvitationEvent extends PSEvent{
 	public var invit : InvitationDesc;
 
 	public static inline var ACCEPTED	: String = "HypPS_INVITE_ACCEPTED";
-	public static inline var CANCEL	: String = "HypPS_INVITE_CANCEL";
+	public static inline var AUTOPICK	: String = "HypPS_INVITE_AUTOPICK";
+	public static inline var CANCEL		: String = "HypPS_INVITE_CANCEL";
 	public static inline var RECEIVED	: String = "HypPS_ON_INVITATION";
 	public static inline var SENT		: String = "HypPS_INVITE_SENT";
 

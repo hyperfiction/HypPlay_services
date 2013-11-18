@@ -48,6 +48,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 
 	final public static String GAME_START		= "HypPS_GAME_START";
 	final public static String INVITE_ACCEPTED	= "HypPS_INVITE_ACCEPTED";
+	final public static String INVITE_AUTOPICK	= "HypPS_INVITE_AUTOPICK";
 	final public static String INVITE_CANCEL	= "HypPS_INVITE_CANCEL";
 	final public static String INVITE_SENT		= "HypPS_INVITE_SENT";
 	final public static String INVITE_USERS		= "HypPS_INVITE_USERS";
@@ -159,7 +160,7 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 				return;
 
 			RoomConfig.Builder 	b = makeBasicRoomConfigBuilder( );
-							b.setInvitationIdToAccept( sInvitation_id );
+								b.setInvitationIdToAccept( sInvitation_id );
 			getGamesClient( ).joinRoom( b.build( ) );
 		}
 
@@ -170,7 +171,8 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static public void leaveRoom( ){
-			getGamesClient().leaveRoom( Multiplayers.getInstance( ) , _currentRoom.getRoomId( ) );
+			if( _currentRoom != null )
+				getGamesClient().leaveRoom( Multiplayers.getInstance( ) , _currentRoom.getRoomId( ) );
 		}
 
 		/**
@@ -204,11 +206,13 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 
 			//
 				Bundle extras = datas.getExtras( );
+				trace("extras ::: "+datas.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS) );
 				Invitation invitation = extras.getParcelable( GamesClient.EXTRA_INVITATION );
 
 			//
 				RoomConfig roomConfig = makeBasicRoomConfigBuilder( )
 			               .setInvitationIdToAccept(invitation.getInvitationId())
+			               .setAutoMatchCriteria( RoomConfig.createAutoMatchCriteria( 0 , 0 , 0 ))
 			               .build();
 				getGamesClient().joinRoom( roomConfig );
 
@@ -223,18 +227,29 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		*/
 		static public void handleInvitation_results( int resultCode , Intent datas ){
 			trace("handleInvitation_results ::: "+resultCode+" = "+datas);
+
 			trace("resultCode ::: "+resultCode+" == "+Activity.RESULT_OK);
+
+			//
+				if( datas == null ){
+					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
+					return;
+				}
+
+			//
+				final ArrayList<String> invitees = datas.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
 
 			//If the invitation popup have been canceled
 				if( resultCode != Activity.RESULT_OK ){
 					onEvent_wrapper( INVITE_CANCEL , "" , resultCode);
 					return;
 				}
-				onEvent_wrapper( INVITE_SENT , "" , resultCode);
 
-			//The invitess list
-				final ArrayList<String> invitees = datas.getStringArrayListExtra(GamesClient.EXTRA_PLAYERS);
-				trace("invitees ::: "+invitees.toString( ));
+				if( invitees.size( ) == 0 ){
+					onEvent_wrapper( INVITE_AUTOPICK , "" , resultCode);
+					return;
+				}
+				onEvent_wrapper( INVITE_SENT , "" , resultCode);
 
 			//Get the automatch criteria
 				Bundle autoMatchCriteria = null;
@@ -399,6 +414,26 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @public
 		* @return	void
 		*/
+		static public String getRoom_creationTimestamp( ){
+			return _currentRoom.getCreationTimestamp( )+"";
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
+		static public String getRoom_creatorId( ){
+			return _currentRoom.getCreatorId( );
+		}
+
+		/**
+		*
+		*
+		* @public
+		* @return	void
+		*/
 		static public String getParticipant_display_name( String s ){
 			trace("getParticipant_display_name ::: "+s);
 			Participant p = _getParticipant_by_id( s );
@@ -412,7 +447,13 @@ class Multiplayers implements RealTimeMessageReceivedListener,
 		* @return	void
 		*/
 		static public String getParticipant_id( String s ){
+			trace("getParticipant_id ::: "+s);
 			Participant p = _getParticipant_by_id( s );
+			trace("p ::: "+p);
+			trace( "plyr ::: "+p.getPlayer( ));
+			if( p.getPlayer( ) == null )
+				return null;
+
 			return p.getPlayer( ).getPlayerId( );
 		}
 
