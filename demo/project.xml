@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<meta title="HypPlayServices Demo" package="fr.hyperfiction.arkeondebug" version="1.0.0" company="Hyperfiction" />
+	<meta package="fr.hyperfiction.arkeondebug"/>
+	<app main="Main" path="bin-debug" file="Playservicesdemo" />
+
+	<source path="src" />
+
+	<haxelib name="openfl" />
+
+	<assets path="assets" rename="assets" exclude="openfl.svg" />
+	<icon path="assets/openfl.svg" />
+
+	<include path=".."/>
+
+	<haxelib name="inthebox-macros"/>
+
+	<android target-sdk-version="17" />
+
+
+
+
+</project>
