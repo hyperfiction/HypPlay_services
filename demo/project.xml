@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-	<meta title="HypPlayServices Demo" package="fr.hyperfiction.arkeondebug" version="1.0.0" company="Hyperfiction" />
+	<meta title="HypPlayServices Demo" package="your.package.demo" version="1.0.0" company="Hyperfiction" />
 	<meta package="fr.hyperfiction.arkeondebug"/>
 	<app main="Main" path="bin-debug" file="Playservicesdemo" />
 
