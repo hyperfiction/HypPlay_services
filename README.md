@@ -3,23 +3,27 @@ HypPlayService
 A Google Play Services native extension for Haxe NME
 -----------------------------
 
-This NME native extension allows you to integrate the Google Play Services into your NME application.
+This NME native extension allows you to integrate the Google Play Services into your OpenFL application.
 
 For now it's Android only.
 iOS will be coming soom.
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Installation
+Requirement
 ------------
+Require OpenFL 1.1+
 
 Android
 -------
-Add the following metadata in to your application inside the <application/> node.
-Fill the value with "\ " followed by your APP_ID.
 
+You must copy the folder named "templateAndroid" into your workspace.
+
+Inside the subfolder "android/templates/res/value/" edit the "ids.xml" file and fill your Google Play Services id.
+
+Then add the following to your OpenFL project file:
 ```xml
-<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ 1234567891" />
+<templatePath name="templates/android/template-path/"/>
 ````
 
 Recompiling
@@ -28,11 +32,7 @@ For recompiling the native extensions just use the sh files contained in the pro
 
 Usage
 -----
-Take a look at the [wiki](https://github.com/hyperfiction/HypPlay_services/wiki) ( WIP )
-
-Quick reference
----------------
-TDB
+Take a look at the [wiki](https://github.com/hyperfiction/HypPlay_services/wiki)
 
 Made at [Hyperfiction](http://hyperfiction.fr)
 --------------------
