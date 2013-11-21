@@ -8,8 +8,6 @@ This NME native extension allows you to integrate the Google Play Services into 
 For now it's Android only.
 iOS will be coming soom.
 
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 Requirement
 ------------
 Require OpenFL 1.1+
@@ -17,14 +15,26 @@ Require OpenFL 1.1+
 Android
 -------
 
-You must copy the folder named "templateAndroid" into your workspace.
-
-Inside the subfolder "android/templates/res/value/" edit the "ids.xml" file and fill your Google Play Services id.
-
-Then add the following to your OpenFL project file:
+Add the following line inside of your project file:
 ```xml
-<templatePath name="templates/android/template-path/"/>
-````
+<!-- Google Play Services ID -->
+<setenv name="GooglePlayID" value="REPLACE_ME_WITH_YOUR_GOOGLEID" />
+```
+
+This library is using Fragments, so you need to edit your OpenFL template class ( GameActivity.java )
+Go into [haxelib folder]/lib/openfl-native/[version]/templates/android/template/src/org/haxe/nme.
+And edtt the "GameActivity" file.
+
+Replace the following line:
+```java
+public class GameActivity extends Activity implements SensorEventListener {
+```
+
+by:
+
+```java
+public class GameActivity extends android.support.v4.app.FragmentActivity implements SensorEventListener {
+```
 
 Recompiling
 -----------
@@ -42,3 +52,4 @@ Developed by :
 License
 -------
 This work is under BSD simplified License.
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
