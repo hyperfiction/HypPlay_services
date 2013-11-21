@@ -18,7 +18,8 @@
 
 	<android target-sdk-version="17" />
 
-
+	<!-- Google Play Services ID -->
+	<setenv name="GooglePlayID" value="REPLACE_ME_WITH_YOUR_GOOGLEID" />
 
 
 </project>
