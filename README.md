@@ -20,18 +20,15 @@ Add the following line inside of your project file:
 <!-- Google Play Services ID -->
 <setenv name="GooglePlayID" value="REPLACE_ME_WITH_YOUR_GOOGLEID" />
 ```
-
 This library is using Fragments, so you need to edit your OpenFL template class ( GameActivity.java )
-Go into [haxelib folder]/lib/openfl-native/[version]/templates/android/template/src/org/haxe/nme.
-And edtt the "GameActivity" file.
 
-Replace the following line:
+Go into [haxelib folder]/lib/openfl-native/[version]/templates/android/template/src/org/haxe/nme.
+
+And edit the "GameActivity" file. Replace the following line:
 ```java
 public class GameActivity extends Activity implements SensorEventListener {
 ```
-
 by:
-
 ```java
 public class GameActivity extends android.support.v4.app.FragmentActivity implements SensorEventListener {
 ```
