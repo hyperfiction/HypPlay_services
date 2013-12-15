@@ -1,9 +1,13 @@
 package fr.hyperfiction.playservices;
 
 import android.util.Log;
-import fr.hyperfiction.playservices.PlayHelper;
-
+import com.google.android.gms.games.GamesClient;
+import com.google.android.gms.games.achievement.Achievement;
+import com.google.android.gms.games.achievement.AchievementBuffer;
+import com.google.android.gms.games.achievement.OnAchievementsLoadedListener;
 import fr.hyperfiction.googleplayservices.HypPlayServices;
+import fr.hyperfiction.playservices.PlayHelper;
+import fr.hyperfiction.playservices.PlayServices;
 
 /**
  * ...
@@ -11,6 +15,8 @@ import fr.hyperfiction.googleplayservices.HypPlayServices;
  */
 
 class Achievements{
+
+	private static Achievement[] achList;
 
 	// -------o constructor
 
@@ -77,9 +83,92 @@ class Achievements{
 				PlayHelper.getInstance( ).getGamesClient( ).unlockAchievementImmediate( PlayHelper.getInstance( ) , sId );
 		}
 
+		/**
+		* 
+		* 
+		* @public
+		* @return	void
+		*/
+		static public void loadUnlocked_list( ){
+			trace("loadUnlocked_list");
+			PlayHelper.getInstance( ).getGamesClient().loadAchievements( listener , true );
+		}
+
+		/**
+		* 
+		* 
+		* @public
+		* @return	void
+		*/
+		static public int getCurrentSteps( int id ){
+			return achList[ id ].getCurrentSteps( );
+		}
+
+		/**
+		* 
+		* 
+		* @public
+		* @return	void
+		*/
+		static public int getState( int id ){
+			return achList[ id ].getState( );		
+		}
+
+		/**
+		* 
+		* 
+		* @public
+		* @return	void
+		*/
+		static public int getId( String sCode ){
+			int l = achList.length;
+			for( int i = 0 ; i < l ; i++ ){		
+				trace("ach ::: "+achList[ i ].getAchievementId( ));
+				if( achList[ i ].getAchievementId( ).equals( sCode ) )
+					return i;
+			}
+
+			return -1;
+		}
+
 	// -------o protected
 
+		private static OnAchievementsLoadedListener listener = new OnAchievementsLoadedListener( ){
+			@Override
+			public void onAchievementsLoaded(int statusCode, AchievementBuffer buffer) {
+				trace("onAchievementsLoaded");
+
+				//PlayServices
+
+				if (statusCode == GamesClient.STATUS_OK) {
+
+					int count = buffer.getCount( );
+					String sRes = "";
+
+					achList = new Achievement[count];
+
+					for( int i = 0 ; i < count ; i++ ){
+						
+						if( sRes != "" )
+							sRes += "|"; 
+							sRes += buffer.get( i ).getAchievementId( )+"="+buffer.get( i ).getState( );
+
+						achList[ i ] = buffer.get( i );
+						
+					}
+					trace( sRes );
+					PlayServices.dispatchEvent( PlayServices.ON_ACHIEVEMENT_LIST , sRes , 0 );
+				}
+
+
+
+				//buffer.close();
+			}
+		};
+
 	// -------o misc
+
+
 
 		/*
 		*
