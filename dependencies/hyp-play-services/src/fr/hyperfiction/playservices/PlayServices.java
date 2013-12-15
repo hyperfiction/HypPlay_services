@@ -16,7 +16,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import fr.hyperfiction.playservices.PlayHelper;
 import fr.hyperfiction.googleplayservices.HypPlayServices;
 
-import org.haxe.nme.HaxeObject;
+//import org.haxe.nme.HaxeObject;
 
 /**
  * ...
@@ -29,14 +29,15 @@ public class PlayServices implements GameHelper.GameHelperListener{
 	static{
 		System.loadLibrary( "HypPlayServices" );
 	}
-
-	final public static String INIT				= "HypPS_INIT";
-	final public static String ON_ACHIEVEMENT_UPDATED	= "HypPS_ON_ACHIEVEMENT_UPDATED";
-	final public static String ON_INVITATION		= "HypPS_ON_INVITATION";
-	final public static String ON_LEADERBOARD_METAS	= "HypPS_ON_LEADERBOARD_METAS";
-	final public static String ON_SCORE_SUBMITTED	= "HypPS_ON_SCORE_SUBMITTED";
-	final public static String SIGIN_FAILED			= "HypPS_SIGIN_FAILED";
-	final public static String SIGIN_SUCCESS		= "HypPS_SIGIN_SUCCESS";
+	
+	final public static String INIT                   = "HypPS_INIT";
+	final public static String ON_ACHIEVEMENT_LIST    = "HypPS_ON_ACHIEVEMENT_LIST";
+	final public static String ON_ACHIEVEMENT_UPDATED = "HypPS_ON_ACHIEVEMENT_UPDATED";
+	final public static String ON_INVITATION          = "HypPS_ON_INVITATION";
+	final public static String ON_LEADERBOARD_METAS   = "HypPS_ON_LEADERBOARD_METAS";
+	final public static String ON_SCORE_SUBMITTED     = "HypPS_ON_SCORE_SUBMITTED";
+	final public static String SIGIN_FAILED           = "HypPS_SIGIN_FAILED";
+	final public static String SIGIN_SUCCESS          = "HypPS_SIGIN_SUCCESS";
 
 	final public static int ID_SETTINGS	= 5007;
 	final public static int ID_ERROR_POPUP	= 6000;
@@ -155,6 +156,16 @@ public class PlayServices implements GameHelper.GameHelperListener{
 		*/
 		static public String getUser_id( ){
 			return HypPlayServices.playHelper.getGamesClient( ).getCurrentPlayerId( );
+		}
+
+		/**
+		* 
+		* 
+		* @public
+		* @return	void
+		*/
+		static public String getSHA1CertFingerprint( ){
+			return HypPlayServices.playHelper.getSHA1CertFingerprint( );
 		}
 
 		/**

@@ -30,7 +30,7 @@ class InvitationEvent extends PSEvent{
 		* @return	void
 		*/
 		public function new( t : String , statusCode : Status , ?invit : InvitationDesc ) {
-			super( t , statusCode );
+			super( t , StatusCode.translate( 0 ) );
 			this.invit = invit;
 		}
 

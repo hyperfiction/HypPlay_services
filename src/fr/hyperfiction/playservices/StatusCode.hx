@@ -7,14 +7,14 @@ package fr.hyperfiction.playservices;
 
 class StatusCode{
 
-	private static inline var STATUS_NETWORK_ERROR_OPERATION_FAILED	: Int = 0x00000006;
-	private static inline var STATUS_OK						: Int = 0x00000000;
-	private static inline var STATUS_PARTICIPANT_NOT_CONNECTED		: Int = 0x00001b5b;
-	private static inline var STATUS_REAL_TIME_CONNECTION_FAILED	: Int = 0x00001b58;
-	private static inline var STATUS_REAL_TIME_INACTIVE_ROOM		: Int = 0x00001b5d;
-	private static inline var STATUS_REAL_TIME_MESSAGE_FAILED		: Int = 0xffffffff;
-	private static inline var STATUS_REAL_TIME_MESSAGE_SEND_FAILED	: Int = 0x00001b59;
-	private static inline var STATUS_REAL_TIME_ROOM_NOT_JOINED		: Int = 0x00001b5c;
+	private static inline var STATUS_NETWORK_ERROR_OPERATION_FAILED : Int = 0x00000006;
+	private static inline var STATUS_OK                             : Int = 0x00000000;
+	private static inline var STATUS_PARTICIPANT_NOT_CONNECTED      : Int = 0x00001b5b;
+	private static inline var STATUS_REAL_TIME_CONNECTION_FAILED    : Int = 0x00001b58;
+	private static inline var STATUS_REAL_TIME_INACTIVE_ROOM        : Int = 0x00001b5d;
+	private static inline var STATUS_REAL_TIME_MESSAGE_FAILED       : Int = 0xffffffff;
+	private static inline var STATUS_REAL_TIME_MESSAGE_SEND_FAILED  : Int = 0x00001b59;
+	private static inline var STATUS_REAL_TIME_ROOM_NOT_JOINED      : Int = 0x00001b5c;
 
 	// -------o constructor
 

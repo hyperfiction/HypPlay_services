@@ -27,11 +27,7 @@ class SigninEvent extends APlayServicesEvent{
 
 	// -------o public
 
-
-
 	// -------o protected
-
-
 
 	// -------o misc
 

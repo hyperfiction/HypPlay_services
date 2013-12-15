@@ -1117,7 +1117,7 @@ public class GameHelper implements GooglePlayServicesClient.ConnectionCallbacks,
         }
     }
 
-    String getSHA1CertFingerprint() {
+    public String getSHA1CertFingerprint() {
         try {
             Signature[] sigs = getContext().getPackageManager().getPackageInfo(
                     getContext().getPackageName(), PackageManager.GET_SIGNATURES).signatures;
