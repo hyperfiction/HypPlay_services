@@ -60,24 +60,32 @@ extern "C"{
 		#ifdef ANDROID
 		//ALOG("hypps_onEvent" );
 		#endif
+		int top = 0;
+		gc_set_top_of_stack(&top,true);
+		gc_exit_blocking();
 		val_call3(
 					eval_onEvent->get( ) ,
 					alloc_string( sType ) ,
 					alloc_string( sArg ),
 					alloc_int( statusCode )
 				);
+		gc_enter_blocking();
 	}
 
 	void Multiplayers_onEvent( const char *sType , const char *sArg , int statusCode ){
 		#ifdef ANDROID
 		//ALOG("Multiplayers_onEvent" );
 		#endif
+		int top = 0;
+		gc_set_top_of_stack(&top,true);
+		gc_exit_blocking();
 		val_call3(
 					eval_onEvent_multi->get( ) ,
 					alloc_string( sType ) ,
 					alloc_string( sArg ),
 					alloc_int( statusCode )
 				);
+		gc_enter_blocking();
 	}
 
 	void Multiplayers_onDatas( const char *sDatas , const char *sFrom ){
