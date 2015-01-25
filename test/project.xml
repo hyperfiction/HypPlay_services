@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Test" package="com.sample.project" version="1.0.0" company="Company Name" />
+	<app main="TestMain" path="bin" file="Test" />
+	
+	<source path="src" />
+
+	<include path=".."/>
+	
+	<haxelib name="inthebox-macros" />
+	<haxelib name="munit" />
+	<haxelib name="openfl" />
+	
+	<assets path="assets" rename="assets" exclude="openfl.svg" />
+	<icon path="Assets/openfl.svg" />
+
+	<haxedef name="verbose_mirrors"/>
+	
+</project>

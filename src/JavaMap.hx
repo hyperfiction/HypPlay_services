@@ -1,0 +1,1 @@
+class JavaMap<K, S>{}

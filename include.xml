@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<dependency name="google-play-services_lib" 
+		path="dependencies/google-play-services_lib" if="android" />
+
+	<android extension="com.google.android.GmsExtension" />
+	
+	<classpath name="src" />
+
+</project>
