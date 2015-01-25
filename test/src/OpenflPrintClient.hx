@@ -172,6 +172,7 @@ class OpenflPrintClient extends PrintClientBase
 		#elseif (js || flash && !openfl)
 			external.setResult(result);
 			external.setResultBackground(result);
+			trace(result);
 		#end
 	}
 
@@ -206,6 +207,7 @@ class OpenflPrintClient extends PrintClientBase
 		#end
 
 		#if openfl
+			trace(result);
 			trace(value);
 		#elseif nodejs
 			untyped process.stdout.write(value);

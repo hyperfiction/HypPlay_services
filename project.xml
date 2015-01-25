@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Validation" package="org.intheboxmacro.validation" 
+		version="1.0.0" company="OpenFL" />
+	<app file="TestMain" main="TestMain" path="bin" />
+	
+	<window background="#222222" fps="30" />
+
+	<source path="test/src" />
+	<source path="src" />
+	
+	<include path="."/>
+	
+	<haxelib name="format" />
+	<haxelib name="hamcrest" />
+	<haxelib name="inthebox-macros" />
+	<haxelib name="mlib" />
+	<haxelib name="munit" />
+	<haxelib name="openfl" />
+	
+	<!-- <haxedef name="verbose_mirrors"/> -->
+
+	<!-- <template path="src/index.html" rename="index.html" if="html5" />
+	-->
+</project>
