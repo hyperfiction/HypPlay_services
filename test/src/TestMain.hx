@@ -83,6 +83,7 @@ class TestMain
 	*/
 	private function completionHandler(successful:Bool):Void
 	{
+		trace("completionHandler");
 		try
 		{
 			#if flash

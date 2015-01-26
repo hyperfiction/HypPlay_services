@@ -37,8 +37,6 @@ class Macro
 							if (field.isPublic) args.shift();
 							args.unshift(macro $i{"nativeInstance"});
 
-							Sys.println(args);
-							
 							var funcArgs:Array<FunctionArg> = [];
 							var i = 0;
 							var fieldName = field.name;

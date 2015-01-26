@@ -16,10 +16,7 @@ class GoogleAnalyticsTest
 	var instance:GoogleAnalytics;
 	var tracker:Dynamic;
 
-	public function new()
-	{
-		
-	}
+	public function new(){}
 
 	@BeforeClass public function beforeClass()
 	{
@@ -28,6 +25,22 @@ class GoogleAnalyticsTest
 
 		tracker = instance.newTracker("UA-58723767-1");
 		Assert.isNotNull(tracker);
+	}
+
+	@Test public function testCustomMetrics()
+	{
+		var builder = new AppViewBuilder();
+		builder.setCustomMetric(10, 100.0);
+
+		var result:Dynamic = null;
+		var hasException = false;
+		try { result = builder.build(); } catch (e:Dynamic){ hasException = true; }
+		Assert.isFalse(hasException);
+		Assert.isNotNull(result);
+
+		hasException = false;
+		try { tracker.send(result); } catch (e:Dynamic){ hasException = true; }			
+		Assert.isFalse(hasException);
 	}
 
 	@Test public function testAppViewBuilder()
@@ -43,7 +56,7 @@ class GoogleAnalyticsTest
 		hasException = false;
 		try
 		{ 
-			tracker.setScreenName("screen-name-test");
+			tracker.setScreenName("screen-name-test2");
 			tracker.send(result); 
 		} 
 		catch (e:Dynamic)

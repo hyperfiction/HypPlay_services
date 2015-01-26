@@ -1,12 +1,37 @@
 package com.google.android.gms.analytics;
 
 @:build(ShortCuts.mirrors())
+@JNI_DEFAULT_PACKAGE("com.google.android.gms.analytics")
+@JNI_DEFAULT_CLASS_NAME("HitBuilders$HitBuilder")
 class HitBuilders
 {
-	public var nativeInstance(default, null):Dynamic;
-	public function new()		
+	@JNI("com.google.android.gms.analytics", "build") 
+	function nativebuild(instance:EventBuilder):nativejava.util.Map<String, String>;
+
+	@JNI("com.google.android.gms.analytics", "setCustomMetric") 
+	function nativeSetCustomMetric(instance:HitBuilders,
+		index:Int, metric:Float):HitBuilders;
+
+	@JNI("com.google.android.gms.analytics", "set") 
+	function set(instance:HitBuilders, paramName:String, paramValue:String):HitBuilders;
+		
+	public var nativeInstance(default, default):Dynamic;
+	public function new(){}
+
+	public function setCustomMetric(index:Int, metric:Float):Dynamic
+	{
+		return nativeSetCustomMetric(nativeInstance, index, metric);
+	}
+
+	public function set(paramName:String, paramValue:String):Dynamic
 	{
 
+	}
+
+	public function build():Dynamic
+	{
+		var result = nativebuild(nativeInstance);
+		return result;
 	}
 }
 
@@ -15,20 +40,12 @@ class HitBuilders
 @JNI_DEFAULT_CLASS_NAME("HitBuilders$AppViewBuilder")
 class AppViewBuilder extends HitBuilders
 {
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:EventBuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():AppViewBuilder;
 	
 	public function new()
 	{
 		super();
 		nativeInstance = create();
-	}
-
-	public function build():Dynamic
-	{
-		var result = nativebuild(nativeInstance);
-		return result;
 	}
 }
 
@@ -42,8 +59,6 @@ class EventBuilder extends HitBuilders
 	public var action(default, null):String;
 	public var label(default, null):String;
 
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:EventBuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():EventBuilder;
 	@JNI function setAction(instance:EventBuilder ,value:String):EventBuilder;
 	@JNI function setCategory(instance:EventBuilder ,value:String):EventBuilder;
@@ -62,12 +77,6 @@ class EventBuilder extends HitBuilders
 		setCategory(nativeInstance, category);
 		setLabel(nativeInstance, label);
 	}
-
-	public function build():Dynamic
-	{
-		var result = nativebuild(nativeInstance);
-		return result;
-	}
 }
 
 @:build(ShortCuts.mirrors())
@@ -78,8 +87,6 @@ class ExceptionBuilder extends HitBuilders
 	public var fatal(default, null):Bool;
 	public var description(default, null):String;
 
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:EventBuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():ExceptionBuilder;
 	@JNI function setDescription(instance:ExceptionBuilder ,value:String):ExceptionBuilder;
 	@JNI function setFatal(instance:ExceptionBuilder ,value:Bool):ExceptionBuilder;
@@ -93,12 +100,6 @@ class ExceptionBuilder extends HitBuilders
 
 		setFatal(nativeInstance, fatal);
 		setDescription(nativeInstance, description);
-	}
-
-	public function build():Dynamic
-	{
-		var result = nativebuild(nativeInstance);
-		return result;
 	}
 }
 
@@ -115,9 +116,7 @@ class ItemBuilder extends HitBuilders
 	public var transactionId(default, null):String;
 
 	@JNI @JNI_CONSTRUCTOR static public function create():ItemBuilder;
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:ItemBuilder):nativejava.util.Map<String, String>;
-
+	
 	@JNI function setCategory(instance:ItemBuilder ,value:String):ItemBuilder;
 	@JNI function setName(instance:ItemBuilder ,value:String):ItemBuilder;
 	@JNI function setPrice(instance:ItemBuilder ,value:Double):ItemBuilder;
@@ -137,7 +136,7 @@ class ItemBuilder extends HitBuilders
 		nativeInstance = create();
 	}
 
-	public function build():Dynamic
+	override public function build():Dynamic
 	{
 		setName(nativeInstance, name);
 		setQuantity(nativeInstance, quantity);
@@ -147,8 +146,7 @@ class ItemBuilder extends HitBuilders
 		if (price != null) setPrice(nativeInstance, price);
 		if (category != null) setCategory(nativeInstance, category);
 
-		var result = nativebuild(nativeInstance);
-		return result;
+		return super.build();
 	}
 }
 
@@ -157,20 +155,12 @@ class ItemBuilder extends HitBuilders
 @JNI_DEFAULT_CLASS_NAME("HitBuilders$ScreenViewbuilder")
 class ScreenViewbuilder extends HitBuilders
 {
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:ScreenViewbuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():ScreenViewbuilder;
 	
 	public function new()
 	{
 		super();
 		nativeInstance = create();
-	}
-
-	public function build():Dynamic
-	{
-		var result = nativebuild(nativeInstance);
-		return result;
 	}
 }
 
@@ -183,8 +173,6 @@ class SocialBuilder extends HitBuilders
 	public var network(default, default):Null<String>;
 	public var target(default, default):Null<String>;
 
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:SocialBuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():SocialBuilder;
 	@JNI function setAction(instance:SocialBuilder ,value:String):SocialBuilder;
 	@JNI function setNetwork(instance:SocialBuilder ,value:String):SocialBuilder;
@@ -200,14 +188,13 @@ class SocialBuilder extends HitBuilders
 		this.target = target; 
 	}
 
-	public function build():Dynamic
+	override public function build():Dynamic
 	{
-		if (action !=null) setAction(nativeInstance, action);
-		if (network !=null) setNetwork(nativeInstance, network);
-		if (target !=null) setTarget(nativeInstance, target);
+		if (action != null) setAction(nativeInstance, action);
+		if (network != null) setNetwork(nativeInstance, network);
+		if (target != null) setTarget(nativeInstance, target);
 
-		var result = nativebuild(nativeInstance);
-		return result;
+		return super.build();
 	}
 }
 
@@ -221,8 +208,6 @@ class TimingBuilder extends HitBuilders
 	public var value(default, default):Null<Float>;
 	public var variable(default, default):Null<String>;
 	
-	@JNI("com.google.android.gms.analytics", "build") 
-	function nativebuild(instance:TimingBuilder):nativejava.util.Map<String, String>;
 	@JNI @JNI_CONSTRUCTOR static public function create():TimingBuilder;
 	@JNI function setCategory(instance:TimingBuilder ,value:String):TimingBuilder;
 	@JNI function setLabel(instance:TimingBuilder ,value:String):TimingBuilder;
@@ -235,14 +220,13 @@ class TimingBuilder extends HitBuilders
 		nativeInstance = create();
 	}
 
-	public function build():Dynamic
+	override public function build():Dynamic
 	{
-		if (category !=null) setCategory(nativeInstance, category);
-		if (label !=null) setLabel(nativeInstance, label);
-		if (value !=null) setValue(nativeInstance, value);
-		if (variable !=null) setVariable(nativeInstance, variable);
+		if (category != null) setCategory(nativeInstance, category);
+		if (label != null) setLabel(nativeInstance, label);
+		if (value != null) setValue(nativeInstance, value);
+		if (variable != null) setVariable(nativeInstance, variable);
 
-		var result = nativebuild(nativeInstance);
-		return result;
+		return super.build();
 	}
 }
